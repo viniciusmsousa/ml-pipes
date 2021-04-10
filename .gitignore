@@ -138,6 +138,7 @@ dmypy.json
 cython_debug/
 
 # Custom files
+.vscode/
 data/
 wip.ipynb
 mlruns/
