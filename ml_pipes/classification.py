@@ -18,19 +18,35 @@ except:
 mlflow.set_experiment(experiment_name)
 
 # DAO
-train, valid = h2o.import_file('data/creditcard.csv').split_frame(ratios=[0.7])
+train, valid = h2o.import_file('../data/creditcard.csv').split_frame(ratios=[0.7])
 train['Class'] = train['Class'].asfactor()
 valid['Class'] = valid['Class'].asfactor()
 
 
+
+
 # Model Run
 with mlflow.start_run():
-    model = H2OAutoML(max_models=10, max_runtime_secs=150, seed=24, nfolds=3, sort_metric='AUCPR')
+    model = H2OAutoML(max_models=10, max_runtime_secs=15, seed=24, nfolds=2, sort_metric='F1')
     model.train(x=train.columns[:-1], y=train.columns[-1:][0], training_frame=train, validation_frame=valid)
 
-    mlflow.log_metric("auc", model.leader.auc())
-    mlflow.log_metric("AUCPR", model.leader.aucpr())
+    # https://docs.h2o.ai/h2o/latest-stable/h2o-docs/performance-and-prediction.html#classification
+    # http://h2o-release.s3.amazonaws.com/h2o/master/3259/docs-website/h2o-py/docs/h2o.metrics.html
+    mlflow.log_metric("F1", model.leader.F1(valid=True)[0][0])
+    mlflow.log_metric("aucpr", model.leader.aucpr(valid=True))
+    mlflow.log_metric("ks", model.leader.kolmogorov_smirnov())
+
     
+    try:
+        rows = model.leader.model_performance(valid).confusion_matrix(metrics=['f1']).to_list()
+        cm = pd.DataFrame(columns=['Pred: 0', 'Pred: 1'], data = rows)\
+            .rename(index = {0: 'Act: 0', 1: 'Act: 1'})
+        
+        logger.info(f'\nConfusion matrix Max F1:\n{cm}')
+        mlflow.log_artifact("data/run_logs.log")
+    except:
+        pass
+
     try:
         model.model_correlation_heatmap(valid).savefig('data/model_correlation.png')
         mlflow.log_artifact("data/model_correlation.png")
@@ -50,6 +66,9 @@ with mlflow.start_run():
         pass
 
     mlflow.h2o.log_model(model.leader, "model")
+
+
+
     
 
 
