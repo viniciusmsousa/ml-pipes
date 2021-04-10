@@ -7,8 +7,9 @@ authors = ["viniciusmsousa <vinisousa04@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 pandas = "^1.2.3"
-numpy = "1.19.5"
-pycaret = "^2.3.0"
+mlflow = "^1.15.0"
+h2o = "^3.32.1"
+matplotlib = "^3.4.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
