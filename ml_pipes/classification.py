@@ -30,16 +30,24 @@ with mlflow.start_run():
 
     mlflow.log_metric("auc", model.leader.auc())
     mlflow.log_metric("AUCPR", model.leader.aucpr())
-
+    
     try:
         model.model_correlation_heatmap(valid).savefig('data/model_correlation.png')
         mlflow.log_artifact("data/model_correlation.png")
+    except:
+        pass
+
     try:
         model.varimp_plot(valid).savefig('data/varimp_plot.png')
         mlflow.log_artifact("data/varimp_plot.png")
+    except:
+        pass
+    
     try:
         model.varimp_heatmap().savefig('data/varimp_heatmap.png')
         mlflow.log_artifact("data/varimp_heatmap.png")
+    except:
+        pass
 
     mlflow.h2o.log_model(model.leader, "model")
     
