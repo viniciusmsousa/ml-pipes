@@ -140,3 +140,5 @@ cython_debug/
 # Custom files
 data/
 wip.ipynb
+mlruns/
+notebooks/
