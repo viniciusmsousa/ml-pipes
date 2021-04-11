@@ -3,11 +3,11 @@ from datetime import datetime
 today = f"{datetime.today().year}-{datetime.today().month}-{datetime.today().day}" 
 
 import pandas as pd
+import mlflow
+from mlflow.tracking import MlflowClient
+import mlflow.h2o
 import h2o
 from h2o.automl import H2OAutoML, get_leaderboard
-import mlflow
-import mlflow.h2o
-#from mlflow.tracking import MlflowClient
 from loguru import logger
 logger.add('logs/logs.log', rotation = '20 MB', level="INFO")
 
@@ -15,7 +15,11 @@ from settings import EXPERIMENT_NAME, H2O_MAX_MEM_SIZE, CLASSIFICATION_SORT_METR
 
 logger.info('=========================')
 logger.info('Setting MLFLOW Experiment')
-experiment = mlflow.create_experiment(EXPERIMENT_NAME)
+try:
+    experiment = mlflow.create_experiment(EXPERIMENT_NAME)
+except:
+    client = MlflowClient()
+    experiment = client.get_experiment_by_name(EXPERIMENT_NAME)
 mlflow.set_experiment(EXPERIMENT_NAME)
 logger.info('-------------------------')
 
@@ -93,6 +97,5 @@ logger.info('Training Completed')
 # /home/luana/miniconda3/bin/conda
 # export MLFLOW_CONDA_HOME="/home/luana/miniconda3/"
 # mlflow models serve -m runs:/bb16aac3de584a5db3beae52dd7bb2ca/model
-#lsof -i :5000
 
 
