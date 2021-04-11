@@ -36,7 +36,7 @@ valid['Class'] = valid['Class'].asfactor()
 logger.info('Training  AutoML')
 # Model Run
 for max_runtime_secs in [10, 15]:
-    run_name = f'{today}_folds_{max_runtime_secs}'
+    run_name = f'{today}_max_runtime_secs_{max_runtime_secs}'
     log_file = f'data/{run_name}.log'
     logger.add(log_file)
     with mlflow.start_run(run_name=run_name):
@@ -97,5 +97,3 @@ logger.info('Training Completed')
 # /home/luana/miniconda3/bin/conda
 # export MLFLOW_CONDA_HOME="/home/luana/miniconda3/"
 # mlflow models serve -m runs:/bb16aac3de584a5db3beae52dd7bb2ca/model
-
-
