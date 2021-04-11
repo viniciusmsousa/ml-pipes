@@ -1,4 +1,4 @@
-# ML-Pipes
+# [wip] ML-Pipes
 
 An experimental project in order to create a simple ML in production enviroment. Where the prduction model is automatically retrained once an event/criteria is verified to be true.
 
