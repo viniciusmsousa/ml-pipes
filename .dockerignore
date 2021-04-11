@@ -3,4 +3,4 @@ poetry.lock
 notebooks/
 mlruns/
 
-## docker run --restart unless-stopped -d -p 3838:3838 --name covid19_monitor viniciusmsousa/covid19-monitor:0.1
+## docker run --restart unless-stopped -d -p 5000:5000 -p 5001:5001 --name ml-pipes viniciusmsousa/ml-pipes:0.1

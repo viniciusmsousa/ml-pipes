@@ -4,6 +4,7 @@ LABEL maintainer = "vinisousa04@gmail.com"
 
 ## OS Configuration
 RUN apt-get update 
+
 # Java Setup
 RUN mkdir -p /usr/share/man/man1
 RUN apt-get install -y openjdk-11-jre
