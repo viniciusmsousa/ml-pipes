@@ -1,0 +1,6 @@
+*.log
+poetry.lock
+notebooks/
+mlruns/
+
+## docker run --restart unless-stopped -d -p 3838:3838 --name covid19_monitor viniciusmsousa/covid19-monitor:0.1
