@@ -10,4 +10,4 @@ python 01TrainClassification.py
 mlflow ui -p 5000 &
 
 # Serving the API
-python 02RunClassificationModelAPI.py &
+python 02RunClassificationModelAPI.py

@@ -18,6 +18,10 @@ RUN apt-get install -y wget\
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 
 
+# Exposing Ports
+EXPOSE 5000
+EXPOSE 5001
+
 ## App Configuration
 # Changing Workdir
 RUN mkdir /usr/src/app
@@ -26,10 +30,6 @@ COPY . /usr/src/app
 
 # Installing App Dependencies
 RUN pip install -r requirements.txt
-
-# Exposing Ports
-EXPOSE 5000
-EXPOSE 5001
 
 # Deploy
 CMD bash deploy.sh
