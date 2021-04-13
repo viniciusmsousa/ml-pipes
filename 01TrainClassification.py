@@ -1,15 +1,16 @@
 # import libs
+import os
 from datetime import datetime
 today = f"{datetime.today().year}-{datetime.today().month}-{datetime.today().day}" 
-
+from loguru import logger
+logger.add('logs/logs.log', rotation = '20 MB', level="INFO")
 import pandas as pd
 import mlflow
 from mlflow.tracking import MlflowClient
 import mlflow.h2o
 import h2o
 from h2o.automl import H2OAutoML, get_leaderboard
-from loguru import logger
-logger.add('logs/logs.log', rotation = '20 MB', level="INFO")
+
 
 from settings import EXPERIMENT_NAME, H2O_MAX_MEM_SIZE, CLASSIFICATION_SORT_METRIC_H2O
 
@@ -91,8 +92,6 @@ logger.add('logs/logs.log', rotation = '20 MB', level="INFO")
 logger.info('-------------------------')
 
 logger.info('Training Completed')
-
-
 # https://varhowto.com/install-miniconda-ubuntu-20-04/
 # /home/luana/miniconda3/bin/conda
 # export MLFLOW_CONDA_HOME="/home/luana/miniconda3/"
