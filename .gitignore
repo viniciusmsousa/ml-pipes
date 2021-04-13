@@ -144,3 +144,4 @@ wip.ipynb
 mlruns/
 notebooks/
 *.db
+MLFLOW_TRACKING_URI/
