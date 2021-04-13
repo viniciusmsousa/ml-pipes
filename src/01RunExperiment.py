@@ -25,8 +25,8 @@ dataset = load_creditcard_dataset()
 
 logger.info('-------------------------')
 logger.info('H2O AutoML Run')
-params_list = [30, 60]
-for i in range(len(params_list)):
+list_max_run_time = [30, 60]
+for i in range(len(list_max_run_time)):
     H2OClassifier(
         run_name = f'H2O_CreditCard{i+1}',
         max_mem_size = '3G',
@@ -34,13 +34,8 @@ for i in range(len(params_list)):
         target_col = 'Class',
         sort_metric = 'aucpr',
         max_models = 8,
-        max_runtime_secs = params_list[i],
+        max_runtime_secs = list_max_run_time[i],
         nfolds = 5,
         seed = 90
     )
 logger.info('=========================')
-
-# https://varhowto.com/install-miniconda-ubuntu-20-04/
-# /home/luana/miniconda3/bin/conda
-# export MLFLOW_CONDA_HOME="/home/luana/miniconda3/"
-# mlflow models serve -m runs:/bb16aac3de584a5db3beae52dd7bb2ca/model
