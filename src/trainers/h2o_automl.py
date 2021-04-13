@@ -1,4 +1,3 @@
-from typing import Object
 from typeguard import typechecked
 from loguru import logger
 logger.add('logs.log')
@@ -9,7 +8,6 @@ from mlflow.tracking import MlflowClient
 import h2o
 from h2o.automl import H2OAutoML
 
-# from settings import MODEL_NAME, CLASSIFICATION_SORT_METRIC_H2O
 
 class H2OClassifier:
     """
@@ -17,12 +15,12 @@ class H2OClassifier:
     """
     @typechecked
     def __init__(
-        self, 
-        run_name: str = 'h2o_automl_classifier',
-        max_mem_size: str = '3G',
+        self,
         df: pd.DataFrame,
         target_col: str,
         sort_metric: str,
+        run_name: str = 'h2o_automl_classifier',
+        max_mem_size: str = '3G',
         max_models: int = 10,
         max_runtime_secs: int = 60,
         nfolds: int = 5,
@@ -43,15 +41,13 @@ class H2OClassifier:
         self.start_h2o()
         
         # 2) Getting Features Cols
-        self.feature_cols = get_feature_cols()
-        
+        self.feature_cols = self.get_feature_cols()
         
         # 3) Spliting into Train and Valid
-        self.train, self.valid = train_valid_split()
-        del self.df
+        self.train, self.valid = self.train_valid_split()
 
         # 4) Training Model
-        self.run_info = mlflow_run()
+        self.run_info = self.mlflow_run()
 
 
     def start_h2o(self):
@@ -93,8 +89,8 @@ class H2OClassifier:
                 model.train(
                     x = self.feature_cols,
                     y = self.target_col, 
-                    training_frame = train,
-                    validation_frame = valid
+                    training_frame = self.train,
+                    validation_frame = self.valid
                 )
 
                 ## 2) Logging Params
