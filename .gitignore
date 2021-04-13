@@ -143,3 +143,4 @@ data/
 wip.ipynb
 mlruns/
 notebooks/
+*.db
