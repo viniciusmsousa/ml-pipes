@@ -34,10 +34,3 @@ docker-compose up
 ```
 
 If everything was done correctely, then you have acess in port 5000 the UI tracking and in 5001 the production model.
-
-## Current State
-
-Trains a H2O AutoML with the Credit Card dataset. Allows to serve the MLFLOW UI and the trained model as an API. This can be reproduced by:
-
-
-With that done it is now possible to train the models in an experiment with `cd src/` -> `python 01RunExperiment.py`. This will train the models. Once it is done you can run inside `src/` `mlflow ui --backend-store-uri sqlite:///mlruns.db` and access the localhost:5000 to use the UI. And finally, to serve the model as an API just run `sh DeploySh.sh`, also inside `src/`. Just be aware that before runninf the `DeployModel.sh` you need to stage the model to production.
