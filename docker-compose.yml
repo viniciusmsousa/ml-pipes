@@ -1,21 +1,21 @@
 version: "3.9"
 services:
-    tracking-ui:
+    tracking_ui:
         image: ml-pipes
         build: 
             context: .
             dockerfile: Dockerfile
         command: mlflow ui --host 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlruns.db
         volumes: 
-            - ./:/usr/src/app
+            - ./:/usr/app
         ports:
             - "5000:5000"
-    model-api:
+    model_api_production:
         image: ml-pipes
         command: mlflow models serve --host 0.0.0.0 -p 5001 --model-uri models:/TestCreditCard/production --no-conda
         volumes:
-            - ./:/usr/src/app
+            - ./:/usr/app
         ports:
             - "5001:5001"
         depends_on: 
-            - tracking-ui
+            - tracking_ui

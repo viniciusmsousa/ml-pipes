@@ -16,9 +16,9 @@ EXPOSE 5001
 
 ## App Configuration
 # Changing Workdir
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
-COPY . /usr/src/app
+RUN mkdir /usr/app
+WORKDIR /usr/app
+COPY . /usr/app
 
 # Installing App Dependencies
 RUN pip install -r requirements.txt
@@ -28,4 +28,4 @@ ENV MLFLOW_TRACKING_URI=sqlite:///mlruns.db
 ARG MLFLOW_TRACKING_URI=sqlite:///mlruns.db
 
 # Set WorkDir to Start UI and Serve Model
-WORKDIR /usr/src/app/src
+WORKDIR /usr/app/src
