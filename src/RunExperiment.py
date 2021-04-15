@@ -44,7 +44,7 @@ logger.info('-------------------------')
 logger.info('Pycaret Run')
 PycaretClassifier(
         experiment_name = EXPERIMENT_NAME,
-        run_name = 'Pycaret2',
+        run_name = 'Pycaret',
         sort_metric = 'precision',
         df = dataset,
         target = 'Class',
