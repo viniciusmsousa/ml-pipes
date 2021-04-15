@@ -12,6 +12,7 @@ h2o = "^3.32.1"
 matplotlib = "^3.4.1"
 loguru = "^0.5.3"
 typeguard = "^2.12.0"
+pycaret = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
