@@ -102,6 +102,7 @@ class H2OClassifier:
                 mlflow.log_metric("F1", model.leader.F1(valid=True)[0][0])
                 mlflow.log_metric("accuracy", model.leader.accuracy(valid=True)[0][0])
                 mlflow.log_metric("aucpr", model.leader.aucpr(valid=True))
+                mlflow.log_metric("auc", model.leader.auc(valid=True))
                 mlflow.log_metric("ks", model.leader.kolmogorov_smirnov())
 
                 ## 4) Logging Artifacts
