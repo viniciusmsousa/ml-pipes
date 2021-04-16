@@ -26,6 +26,19 @@ class H2OClassifier:
         nfolds: int = 5,
         seed: int = 90
     ):
+        """Wrapper for the H2O AutoMl Algo. It instanciates a H2O enviroment to run AutoMl.
+
+        Args:
+            df (pd.DataFrame): Dataset with target and feature.
+            target_col (str): Target column to be predicted.
+            sort_metric (str): H2O Metric to be used to select the best model.
+            run_name (str, optional): MLFlow run name. Defaults to 'h2o_automl_classifier'.
+            max_mem_size (str, optional): Max memory to the allocated to H2O. Defaults to '3G'.
+            max_models (int, optional): Number max of models o be fitted. Defaults to 10.
+            max_runtime_secs (int, optional): Max run time, in seconds. Defaults to 60.
+            nfolds (int, optional): Number of folds for cross validation. Defaults to 5.
+            seed (int, optional): Seed. Defaults to 90.
+        """
         # Params Values
         self.run_name = run_name
         self.max_mem_size = max_mem_size
