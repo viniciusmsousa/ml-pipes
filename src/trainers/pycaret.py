@@ -31,6 +31,24 @@ class PycaretClassifier:
         multicollinearity_threshold: float = 0.95,
         session_id: int = 54321
     ):
+        """A class build upon PyCaret to fit SkLearn Classifiers.
+
+        Args:
+            experiment_name (str): MLFlow Name Experiment.
+            run_name (str): MLFlow run name.
+            sort_metric (str): PyCaret Metric to sort the models.
+            df (pd.DataFrame): Dataset with target and features.
+            target (str): Target column name.
+            n_best_models (int, optional): Number of best models to be logged in MLFlow. Defaults to 3.
+            data_split_stratify (bool, optional): If False then data is not stratified. Defaults to True.
+            nfolds (int, optional): Number of folds for cross validation. Defaults to 5.
+            normalize (bool, optional): If true then features are normalized. Defaults to True.
+            transformation (bool, optional): If True then features a transformed to fit normal distribution. Defaults to True.
+            ignore_low_variance (bool, optional): If True low variance is ignores. Defaults to True.
+            remove_multicollinearity (bool, optional): If True removes multicollinearity. Defaults to True.
+            multicollinearity_threshold (float, optional): Multicolinearity threshold. Defaults to 0.95.
+            session_id (int, optional): Id. Defaults to 54321.
+        """
         # Params Values
         self.experiment_name = experiment_name
         self.run_name = run_name
