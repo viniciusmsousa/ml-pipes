@@ -12,7 +12,7 @@ services:
             - "5000:5000"
     model_api_production:
         image: ml-pipes
-        command: mlflow models serve --host 0.0.0.0 -p 5001 --model-uri models:/TestCreditCard/production --no-conda
+        command: mlflow models serve --host 0.0.0.0 -p 5001 --model-uri models:/CreditCardDefault/production --no-conda
         volumes:
             - ./:/usr/app
         ports:

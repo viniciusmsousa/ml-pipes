@@ -27,5 +27,5 @@ RUN pip install -r requirements.txt
 ENV MLFLOW_TRACKING_URI=sqlite:///mlruns.db
 ARG MLFLOW_TRACKING_URI=sqlite:///mlruns.db
 
-# Set WorkDir to Start UI and Serve Model
+# Set WorkDir to Run the Experiment
 WORKDIR /usr/app/src

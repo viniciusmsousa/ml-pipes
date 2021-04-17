@@ -1,12 +1,11 @@
 # Import Libs
-import os
-
 from loguru import logger
 logger.add('logs.log', rotation = '5 MB', level="INFO")
 import mlflow
 from mlflow.tracking import MlflowClient
+from mlflow.entities import ViewType 
 
-from settings import EXPERIMENT_NAME, FOLDS
+from settings import EXPERIMENT_NAME, FOLDS, CREDIT_CARD_MODEL_NAME
 from dao.CreditCardDefault import load_creditcard_dataset
 from trainers.h2o_automl import H2OClassifier
 from trainers.pycaret import PycaretClassifier
@@ -58,5 +57,34 @@ PycaretClassifier(
         multicollinearity_threshold = 0.95,
         session_id = 54321
 )
+logger.info('-------------------------')
 
+logger.info('Start Deploying Model')
+## Getting The best Model
+champion = MlflowClient().search_runs(
+    experiment_ids=[str(mlflow.get_experiment_by_name(name=EXPERIMENT_NAME).experiment_id)],
+    run_view_type=ViewType.ALL,
+    order_by=["metrics.auc DESC"],
+    max_results=1
+)
+run_id = champion[0].info.run_id
+
+## Registering it and setting it to production
+model = mlflow.register_model(
+    model_uri=f"runs:/{run_id}/model",
+    name=CREDIT_CARD_MODEL_NAME
+)
+
+
+MlflowClient().update_model_version(
+    name=CREDIT_CARD_MODEL_NAME,
+    version=model.version,
+    description='Test deploying model with model registery'
+)
+
+MlflowClient().transition_model_version_stage(
+    name=CREDIT_CARD_MODEL_NAME,
+    version=model.version,
+    stage="Production"
+)
 logger.info('=========================')
