@@ -5,7 +5,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType 
 
-from settings import EXPERIMENT_NAME, FOLDS, CREDIT_CARD_MODEL_NAME
+from settings import EXPERIMENT_NAME, FOLDS, CREDIT_CARD_MODEL_NAME, CHAMPION_METRIC
 from dao.CreditCardDefault import load_creditcard_dataset
 from trainers.h2o_automl import H2OClassifier
 from trainers.pycaret import PycaretClassifier
@@ -64,7 +64,7 @@ logger.info('Start Deploying Model')
 champion = MlflowClient().search_runs(
     experiment_ids=[str(mlflow.get_experiment_by_name(name=EXPERIMENT_NAME).experiment_id)],
     run_view_type=ViewType.ALL,
-    order_by=["metrics.auc DESC"],
+    order_by=[f"metrics.{CHAMPION_METRIC} DESC"],
     max_results=1
 )
 run_id = champion[0].info.run_id

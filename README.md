@@ -43,24 +43,41 @@ Before start running any code make sure that the following requisites are meet:
 
 ### 2) Runing the Experiment
 
-MLFlow is built upon the concept of experiments. Where each experiment a series os run, each run being a candidate model. The script `src/RunExperiment.py` contain the code to run an H2O AutoML algorithm and the PyCaret classification module algorithms and set to production stage ([MLFlow Model Regitsry Concepts](https://www.mlflow.org/docs/latest/model-registry.html#concepts)). Feel free to go through the script and understand it. 
+MLFlow is built upon the concept of experiments. Where each experiment a series os run, each run being a candidate model. The script `src/RunExperiment.py` contain the code to run an H2O AutoML algorithm and the PyCaret classification module algorithms and set to production stage ([MLFlow Model Regitsry Concepts](https://www.mlflow.org/docs/latest/model-registry.html#concepts)). Feel free to go through the script and understand it, the script bassicaly:
+
+1) Setup and MLFLow Experiemnt;
+2) Load the Credit Card dataset;
+3) Trains an H2O AutoML;
+4) Trains sklearn classifiers, using PyCaret interface;
+5) Select the best model according to the CHAMPION_METRIC;
+6) Set the best model the production stage.
 
 In order to run the experiment you can simply execute inside the folder `src/` the following command:
-```
+```shell
 python RunExperiment.py
 ```
-This will train two models, fell free to check the script and play around. Onde it is finished MLFLOW will have created a `mlruns/` and `mlruns.db` inside src. These are the files needed in order to lauch the tracking UI and to serve the model as an API. 
 
-Make sure that once the experiment is finished you run the UI locally, executing `mlflow ui --host 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlruns.db` inside `src/`, and [register a model in the model registery](https://www.mlflow.org/docs/latest/model-registry.html#ui-workflow) with the name `TestCreditCard` (or change the name in the `docker-compose.yml` file). 
+Once the experiment finished running you can deploy the [MLFlow Tracking UI](https://www.mlflow.org/docs/latest/tracking.html#tracking-ui) locally by running in the terminal inside the `src/` folder the command 
+```shell
+mlflow ui 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlruns.db
+```
 
-Now you are all set to deploy it using docker.
+and deploy the best model using the [MLFlow Model Registery](https://www.mlflow.org/docs/latest/model-registry.html) by running
 
-### 3) Deploy
+```shell
+export MLFLOW_TRACKING_URI="sqlite:///mlruns.db" &&
 
-Just execute in the root project folder. 
+mlflow models serve -p 5001 --model-uri models:/CreditCardDefault/production --no-conda
+```
+
+Now you should be able to access both services in the localhost ports.
+
+### 3) 'Dockering'
+
+In order to have a more robust way to serve the model API and Tracking UI a good ideia is to use docker. This is done in through the `Dockerfile` and `docker-compose.yml`. To start the UI and Api simple execute the following command in the root project directory
 ```
 docker-compose up
 ```
 
-If everything was done correctely, then you have acess in port 5000 the UI tracking and in 5001 the production model.
+If everything was done correctly, then you have acess in port 5000 the UI tracking and in 5001 the production model, but now serving each service as a separated container.
 
