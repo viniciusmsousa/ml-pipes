@@ -60,7 +60,7 @@ PycaretClassifier(
 logger.info('-------------------------')
 
 logger.info('Start Deploying Model')
-## Getting The best Model
+## Getting The best Model according to AUC Metric
 champion = MlflowClient().search_runs(
     experiment_ids=[str(mlflow.get_experiment_by_name(name=EXPERIMENT_NAME).experiment_id)],
     run_view_type=ViewType.ALL,
@@ -79,7 +79,7 @@ model = mlflow.register_model(
 MlflowClient().update_model_version(
     name=CREDIT_CARD_MODEL_NAME,
     version=model.version,
-    description='Test deploying model with model registery'
+    description='Deploying model with model registery'
 )
 
 MlflowClient().transition_model_version_stage(
