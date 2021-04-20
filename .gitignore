@@ -141,7 +141,7 @@ cython_debug/
 .vscode/
 data/
 wip.ipynb
-src/wip.py
+src/*.ipynb
 mlruns/
 notebooks/
 *.db
