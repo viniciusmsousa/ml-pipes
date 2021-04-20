@@ -146,3 +146,4 @@ mlruns/
 notebooks/
 *.db
 MLFLOW_TRACKING_URI/
+src/remove_mlruns.sh
