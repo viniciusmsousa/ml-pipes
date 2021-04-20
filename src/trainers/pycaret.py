@@ -7,6 +7,7 @@ import mlflow
 import mlflow.sklearn
 from mlflow.tracking import MlflowClient
 import pycaret.classification as PycaretClassifierModule
+from ds_toolbox.statistics import ks_test   
 
 
 class PycaretClassifier:
@@ -103,10 +104,12 @@ class PycaretClassifier:
 
                 ## 4) MLFlow Logs
                 with mlflow.start_run(run_name=f"pycaret_{self.sort_metric}_{i}") as run:
+                    # Logging Parameters
                     mlflow.log_param('sort_metric', self.sort_metric)
                     mlflow.log_param('model', df_metrics['Model'][0])
 
 
+                    # Logging Metrics
                     mlflow.log_metric("accuracy", df_metrics['Accuracy'][0])
                     mlflow.log_metric("auc", df_metrics['AUC'][0])
                     mlflow.log_metric("recall", df_metrics['Recall'][0])
@@ -114,8 +117,25 @@ class PycaretClassifier:
                     mlflow.log_metric("f1", df_metrics['F1'][0])
                     mlflow.log_metric("kappa", df_metrics['Kappa'][0])
                     mlflow.log_metric("mcc", df_metrics['MCC'][0])
+                    
+                    # (logging ks metric and table)
+                    try:
+                        predict_df = PycaretClassifierModule.predict_model(model, probability_threshold=0.5)
+                        predict_df['Class'] = predict_df['Class'].astype(int)
+                        predict_df['prob_event'] = model.predict_proba(predict_df[predict_df.columns[:-3]]).T[1] 
+                        predict_df = predict_df[['Class', 'prob_event']]
+                        ks_result = ks_test(df=predict_df, col_target='Class', col_probability='prob_event')
+                        mlflow.log_metric("ks", round(ks_result['max_ks']/100, 2))
+                        ks_result['ks_table'].to_csv('ks_table.csv')
+                        mlflow.log_artifact('ks_table.csv')
+                        os.remove('ks_table.csv')
+                    except:
+                        mlflow.log_metric("ks", 0)
+
+                    # Logging Models
                     mlflow.sklearn.log_model(model, "model") 
-                
+
+                    # Logging Artefacts
                     model_plots = ['auc', 'pr', 'confusion_matrix', 'error',
                         'class_report', 'boundary', 'manifold', 'calibration',
                         'dimension', 'feature', 'parameter']
@@ -127,7 +147,6 @@ class PycaretClassifier:
                             os.remove(file)
                         except:
                             logger.info(f'Failed to log plot {p}')
-                            pass
 
             return 200
 
