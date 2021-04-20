@@ -116,19 +116,18 @@ class PycaretClassifier:
                     mlflow.log_metric("mcc", df_metrics['MCC'][0])
                     mlflow.sklearn.log_model(model, "model") 
                 
-                    try:
-                        PycaretClassifierModule.plot_model(model,plot='pr', save=True)
-                        mlflow.log_artifact("Precision Recall.png")
-                        os.remove('Precision Recall.png')
-                    except:
-                        pass
+                    model_plots = ['auc', 'pr', 'confusion_matrix', 'error',
+                        'class_report', 'boundary', 'manifold', 'calibration',
+                        'dimension', 'feature', 'parameter']
 
-                    try:
-                        PycaretClassifierModule.plot_model(model,plot='confusion_matrix', save=True)
-                        mlflow.log_artifact("Confusion Matrix.png")
-                        os.remove('Confusion Matrix.png')
-                    except:
-                        pass
+                    for p in model_plots:
+                        try:
+                            file = PycaretClassifierModule.plot_model(model, plot=p, save=True)
+                            mlflow.log_artifact(file)
+                            os.remove(file)
+                        except:
+                            logger.info(f'Failed to log plot {p}')
+                            pass
 
             return 200
 
