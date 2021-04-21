@@ -132,7 +132,7 @@ class PycaretClassifier:
                         mlflow.log_artifact('ks_table.csv')
                         os.remove('ks_table.csv')
                     except:
-                        mlflow.log_metric("ks", 0)
+                        pass
 
                     # Logging Models
                     mlflow.sklearn.log_model(model, "model") 
