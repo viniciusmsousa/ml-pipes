@@ -112,11 +112,11 @@ class PycaretClassifier:
 
 
                     # Logging Metrics
-                    mlflow.log_metric("accuracy", df_metrics['Accuracy'][0])
-                    mlflow.log_metric("auc", df_metrics['AUC'][0])
-                    mlflow.log_metric("recall", df_metrics['Recall'][0])
-                    mlflow.log_metric("precision", df_metrics['Prec.'][0])
                     mlflow.log_metric("f1", df_metrics['F1'][0])
+                    mlflow.log_metric("auc", df_metrics['AUC'][0])
+                    mlflow.log_metric("accuracy", df_metrics['Accuracy'][0])
+                    mlflow.log_metric("precision", df_metrics['Prec.'][0])
+                    mlflow.log_metric("recall", df_metrics['Recall'][0])
                     mlflow.log_metric("kappa", df_metrics['Kappa'][0])
                     mlflow.log_metric("mcc", df_metrics['MCC'][0])
                     

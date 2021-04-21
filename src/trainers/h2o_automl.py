@@ -114,11 +114,13 @@ class H2OClassifier:
                 ## 3) Logging Metrics
                 # https://docs.h2o.ai/h2o/latest-stable/h2o-docs/performance-and-prediction.html#classification
                 # http://h2o-release.s3.amazonaws.com/h2o/master/3259/docs-website/h2o-py/docs/h2o.metrics.html
-                mlflow.log_metric('accuracy', model.leader.accuracy(valid=True, thresholds=[self.threshold])[0][1])
-                mlflow.log_metric("f1", model.leader.F1(valid=True)[0][0])
-                mlflow.log_metric("accuracy", model.leader.accuracy(valid=True)[0][0])
-                mlflow.log_metric("aucpr", model.leader.aucpr(valid=True))
+                mlflow.log_metric("f1", model.leader.F1(valid=True, thresholds=[self.threshold])[0][1])
                 mlflow.log_metric("auc", model.leader.auc(valid=True))
+                mlflow.log_metric("aucpr", model.leader.aucpr(valid=True))
+                mlflow.log_metric('accuracy', model.leader.accuracy(valid=True, thresholds=[self.threshold])[0][1])
+                mlflow.log_metric("precision", model.leader.precision(valid=True, thresholds=[self.threshold])[0][1])
+                mlflow.log_metric("recall", model.leader.recall(valid=True, thresholds=[self.threshold])[0][1])
+                mlflow.log_metric("mcc", model.leader.mcc(valid=True, thresholds=[self.threshold])[0][1])                
                 mlflow.log_metric("ks", model.leader.kolmogorov_smirnov())
 
                 ## 4) Logging Artifacts
