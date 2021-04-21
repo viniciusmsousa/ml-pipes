@@ -5,7 +5,7 @@ import mlflow
 from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType 
 
-from settings import EXPERIMENT_NAME, FOLDS, CREDIT_CARD_MODEL_NAME, CHAMPION_METRIC
+from settings import EXPERIMENT_NAME, FOLDS, CREDIT_CARD_MODEL_NAME, CHAMPION_METRIC, THRESHOLD
 from dao.CreditCardDefault import load_creditcard_dataset
 from trainers.h2o_automl import H2OClassifier
 from trainers.pycaret import PycaretClassifier
@@ -30,6 +30,7 @@ logger.info('Startting H2O Run')
 H2OClassifier(
     run_name = 'H2O',
     max_mem_size = '3G',
+    threshold = THRESHOLD,
     df = dataset,
     target_col = 'Class',
     sort_metric = 'aucpr',
@@ -47,6 +48,7 @@ PycaretClassifier(
         sort_metric = 'precision',
         df = dataset,
         target = 'Class',
+        threshold = THRESHOLD,
         n_best_models = 3,
         data_split_stratify = True,
         nfolds = FOLDS,

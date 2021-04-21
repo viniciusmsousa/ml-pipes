@@ -22,6 +22,7 @@ class PycaretClassifier:
         sort_metric: str,
         df: pd.DataFrame,
         target: str,
+        threshold: float = 0.5,
         n_best_models: int = 3,
         data_split_stratify: bool =True,
         nfolds: int = 5,
@@ -54,6 +55,7 @@ class PycaretClassifier:
         self.experiment_name = experiment_name
         self.run_name = run_name
         self.sort_metric = sort_metric
+        self.threshold = threshold
         self.df = df
         self.target = target
         self.n_best_models = n_best_models
@@ -120,7 +122,7 @@ class PycaretClassifier:
                     
                     # (logging ks metric and table)
                     try:
-                        predict_df = PycaretClassifierModule.predict_model(model, probability_threshold=0.5)
+                        predict_df = PycaretClassifierModule.predict_model(model, probability_threshold=self.threshold)
                         predict_df['Class'] = predict_df['Class'].astype(int)
                         predict_df['prob_event'] = model.predict_proba(predict_df[predict_df.columns[:-3]]).T[1] 
                         predict_df = predict_df[['Class', 'prob_event']]

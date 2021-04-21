@@ -19,6 +19,7 @@ class H2OClassifier:
         df: pd.DataFrame,
         target_col: str,
         sort_metric: str,
+        threshold: float= 0.5,
         run_name: str = 'h2o_automl_classifier',
         max_mem_size: str = '3G',
         max_models: int = 10,
@@ -42,6 +43,7 @@ class H2OClassifier:
         # Params Values
         self.run_name = run_name
         self.max_mem_size = max_mem_size
+        self.threshold = threshold
         self.df = df
         self.target_col = target_col
         self.sort_metric = sort_metric
@@ -112,7 +114,8 @@ class H2OClassifier:
                 ## 3) Logging Metrics
                 # https://docs.h2o.ai/h2o/latest-stable/h2o-docs/performance-and-prediction.html#classification
                 # http://h2o-release.s3.amazonaws.com/h2o/master/3259/docs-website/h2o-py/docs/h2o.metrics.html
-                mlflow.log_metric("F1", model.leader.F1(valid=True)[0][0])
+                mlflow.log_metric('accuracy', model.leader.accuracy(valid=True, thresholds=[self.threshold])[0][1])
+                mlflow.log_metric("f1", model.leader.F1(valid=True)[0][0])
                 mlflow.log_metric("accuracy", model.leader.accuracy(valid=True)[0][0])
                 mlflow.log_metric("aucpr", model.leader.aucpr(valid=True))
                 mlflow.log_metric("auc", model.leader.auc(valid=True))
