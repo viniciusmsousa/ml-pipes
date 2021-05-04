@@ -79,5 +79,5 @@ In order to have a more robust way to serve the model API and Tracking UI a good
 docker-compose up
 ```
 
-When you ran for the first time this should take a while, since it will build the docker image and then deploy the containers. If everything was done correctly, then you have acess in port 5000 the UI tracking and in 5001 the production model, but now serving each service as a separated container.
+When you run for the first time this should take a while, since it will build the docker image and then deploy the containers. If everything was done correctly, then you have acess in port 5000 the UI tracking and in 5001 the production model, but now serving each service as a separated container.
 
