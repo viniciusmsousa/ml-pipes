@@ -1,6 +1,6 @@
 # Experiment Context
 EXPERIMENT_NAME = "CreditCardDefault"
-PATH_CREDIT_CARD_DATASET = "dao/data/creditcard.csv"
+PATH_CREDIT_CARD_DATASET = "dao/data/"
 TRACKING_URI = 'sqlite:///mlruns.db'
 
 # Model Contex
