@@ -1,17 +1,17 @@
 import json
 from typing import Optional, List
-from enum import Enum
 from loguru import logger
 logger.add('logs.log')
 
 from fastapi import FastAPI
 from pydantic import BaseModel
+from enum import Enum
 
 import pandas as pd
 import mlflow
 
 from settings import CREDIT_CARD_MODEL_NAME, TRACKING_URI
-
+from dao.CreditCardDefault import write_predictions
 
 # Loading MLFlow Models
 mlflow.set_tracking_uri(TRACKING_URI)
@@ -64,10 +64,10 @@ class CreditModelObservations(BaseModel):
 
 @app.post("/models/prediction/{model_name}")
 def invoke_prediction(model_name: ModelName, observation: CreditModelObservations):
-    df_to_be_predicted = pd.read_json(observation.json()).drop(columns=['id'])
-    prediction = model.predict(df_to_be_predicted)
+    df_to_be_predicted = pd.read_json(observation.json())
+    prediction = model.predict(df_to_be_predicted.drop(columns=['id']))
     df_with_predictions = df_to_be_predicted
     df_with_predictions['prediction'] = prediction
-    df_with_predictions
-
+    write_predictions(df_with_predictions)
+    
     return  df_with_predictions.to_dict('list')
