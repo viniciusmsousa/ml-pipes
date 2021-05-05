@@ -10,7 +10,7 @@ from pydantic import BaseModel
 import pandas as pd
 import mlflow
 
-from settings import EXPERIMENT_NAME, CREDIT_CARD_MODEL_NAME, TRACKING_URI
+from settings import CREDIT_CARD_MODEL_NAME, TRACKING_URI
 
 
 # Loading MLFlow Models
@@ -20,14 +20,17 @@ model = mlflow.pyfunc.load_model(
 )
 
 
-
-
 # SettingServing the API
+app = FastAPI()
 class ModelName(str, Enum):
-    creditCardDefault = EXPERIMENT_NAME
-
+    """Defining the Models Options.
+    """
+    creditCardDefault = CREDIT_CARD_MODEL_NAME
 
 class CreditModelObservations(BaseModel):
+    """Defining the Data Structure of observations 
+    to be predicted with the CreditCardModel.
+    """
     V1: List[float]
     V2: List[float]
     V3: List[float]
@@ -59,13 +62,9 @@ class CreditModelObservations(BaseModel):
     Amount: List[float]
     id: List[int]
 
-
-app = FastAPI()
-
 @app.post("/models/prediction/{model_name}")
 def invoke_prediction(model_name: ModelName, observation: CreditModelObservations):
     df_to_be_predicted = pd.read_json(observation.json()).drop(columns=['id'])
-    # print(type(df_to_be_predicted))
     prediction = model.predict(df_to_be_predicted)
     df_with_predictions = df_to_be_predicted
     df_with_predictions['prediction'] = prediction
