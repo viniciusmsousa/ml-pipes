@@ -59,7 +59,7 @@ python RunExperiment.py
 
 Once the experiment finished running you can deploy the [MLFlow Tracking UI](https://www.mlflow.org/docs/latest/tracking.html#tracking-ui) locally by running in the terminal inside the `src/` folder the command 
 ```shell
-mlflow ui 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlruns.db
+mlflow ui -p 5000 --backend-store-uri sqlite:///mlruns.db
 ```
 
 and deploy the best model using the [MLFlow Model Registery](https://www.mlflow.org/docs/latest/model-registry.html) by running
