@@ -1,5 +1,3 @@
-from loguru import logger
-logger.add('logs.log', rotation='2 MB')
 import pandas as pd
 from settings import PATH_CREDIT_CARD_DATASET
 
@@ -10,7 +8,6 @@ def load_creditcard_dataset():
         df_event = df.loc[df['Class']==1].sample(250)
         return df_nonevent.append(df_event)
     except Exception as e:
-        logger.error(e)
         raise Exception(e)
 
 def write_predictions(df_predictions: pd.DataFrame):
@@ -23,5 +20,4 @@ def write_predictions(df_predictions: pd.DataFrame):
             mode='a'
         )
     except Exception as e:
-        logger.error(e)
         raise Exception(e)

@@ -1,6 +1,4 @@
 from typeguard import typechecked
-from loguru import logger
-logger.add('logs.log')
 import pandas as pd
 import mlflow
 import mlflow.h2o
@@ -69,14 +67,12 @@ class H2OClassifier:
         try:
             h2o.init(max_mem_size=self.max_mem_size)
         except Exception as e:
-            logger.error(e)
             raise Exception(e)
 
     def get_feature_cols(self):
         try:
            return list(self.df.columns[self.df.columns != self.target_col])
         except Exception as e:
-            logger.error(e)
             raise Exception(e)
 
     def train_valid_split(self):
@@ -86,7 +82,6 @@ class H2OClassifier:
             valid[self.target_col] = valid[self.target_col].asfactor()
             return train, valid
         except Exception as e:
-            logger.error(e)
             raise Exception(e)
 
     def mlflow_run(self):
@@ -144,5 +139,4 @@ class H2OClassifier:
                 return run.info 
 
         except Exception as e:
-            logger.error(e)
             raise Exception(e)

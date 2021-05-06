@@ -1,6 +1,6 @@
 # Import Libs
 from loguru import logger
-logger.add('logs.log', rotation = '5 MB', level="INFO")
+logger.add('../logs/logs.log', rotation = '5 MB', level="INFO")
 import mlflow
 from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType 

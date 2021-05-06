@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from typing import Optional, List
 from loguru import logger
-logger.add('logs.log')
+logger.add('../logs/logs.log', rotation = '5 MB', level="INFO")
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -19,13 +19,21 @@ from dao.CreditCardDefault import write_predictions
 mlflow.set_tracking_uri(TRACKING_URI)
 
 ## Credit Card Models
-credit_card_production_model = mlflow.pyfunc.load_model(
-    model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/production"
-)
+try:
+    credit_card_production_model = mlflow.pyfunc.load_model(
+        model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/production"
+    )
+except:
+    logger.info(f'No {CREDIT_CARD_MODEL_NAME} production model found.')
+    pass
 
-credit_card_staging_model = mlflow.pyfunc.load_model(
-    model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/staging"
-)
+try:
+    credit_card_staging_model = mlflow.pyfunc.load_model(
+        model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/staging"
+    )
+except:
+    logger.info(f'No {CREDIT_CARD_MODEL_NAME} staging model found.')
+    pass
 
 
 # SettingServing the API
@@ -89,12 +97,12 @@ def invoke_prediction(
             try:
                 prediction = credit_card_production_model.predict(df_to_be_predicted.drop(columns=['id']))
             except:
-                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of model {model_name} found')
+                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of {model_name} model found.')
         else:
             try:
                 prediction = credit_card_staging_model.predict(df_to_be_predicted.drop(columns=['id']))
             except:
-                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of model {model_name} found')
+                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of {model_name} model found.')
         
         df_with_predictions = df_to_be_predicted
         if type(prediction)==pd.DataFrame:

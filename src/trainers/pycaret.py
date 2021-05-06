@@ -1,7 +1,5 @@
 import os
 from typeguard import typechecked
-from loguru import logger
-logger.add('logs.log')
 import pandas as pd
 import mlflow
 import mlflow.sklearn
@@ -148,10 +146,10 @@ class PycaretClassifier:
                             mlflow.log_artifact(file)
                             os.remove(file)
                         except:
-                            logger.info(f'Failed to log plot {p}')
+                            pass
 
+            os.remove('logs.log') 
             return 200
 
         except Exception as e:
-            logger.error(e)
             raise Exception(e)
