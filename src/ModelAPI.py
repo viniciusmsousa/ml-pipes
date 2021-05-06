@@ -37,7 +37,7 @@ class ModelName(str, Enum):
 
 app = FastAPI(title='Ml-Pipes')
 class ModelLifeStage(str, Enum):
-    """List of availiable models.
+    """List of availiable model life stages.
     """
     production = MODEL_LIFE_STAGES['production']
     staging = MODEL_LIFE_STAGES['staging']
