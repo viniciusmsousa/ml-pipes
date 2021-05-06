@@ -35,7 +35,7 @@ class ModelName(str, Enum):
     """
     creditCardDefault = CREDIT_CARD_MODEL_NAME
 
-app = FastAPI()
+app = FastAPI(title='Ml-Pipes')
 class ModelLifeStage(str, Enum):
     """List of availiable models.
     """
