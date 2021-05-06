@@ -38,6 +38,8 @@ except:
 
 # SettingServing the API
 app = FastAPI(title='Ml-Pipes')
+
+## Defining Data Structures
 class ModelName(str, Enum):
     """List of availiable models.
     """
@@ -84,6 +86,7 @@ class CreditModelObservations(BaseModel):
     Amount: List[float]
     id: List[int]
 
+## Defining Prediction End Point
 @app.post("/models/prediction/{model_name}/{model_life_stage}")
 def invoke_prediction(
     model_name: ModelName,
