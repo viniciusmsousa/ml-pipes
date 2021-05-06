@@ -12,7 +12,7 @@ services:
             - "5000:5000"
     model_api_production:
         image: ml-pipes
-        command: mlflow models serve --host 0.0.0.0 -p 5001 --model-uri models:/CreditCardDefault/production --no-conda
+        command: uvicorn ModelAPI:app --host 0.0.0.0 --port 5001 --reload
         volumes:
             - ./:/usr/app
         ports:

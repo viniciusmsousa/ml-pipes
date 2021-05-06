@@ -9,6 +9,7 @@ RUN apt-get update
 # Java Setup
 RUN mkdir -p /usr/share/man/man1
 RUN apt-get install -y openjdk-11-jre
+RUN apt-get install -y git
 
 # Exposing Ports
 EXPOSE 5000
