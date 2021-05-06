@@ -29,13 +29,12 @@ credit_card_staging_model = mlflow.pyfunc.load_model(
 
 
 # SettingServing the API
-app = FastAPI()
+app = FastAPI(title='Ml-Pipes')
 class ModelName(str, Enum):
     """List of availiable models.
     """
     creditCardDefault = CREDIT_CARD_MODEL_NAME
 
-app = FastAPI(title='Ml-Pipes')
 class ModelLifeStage(str, Enum):
     """List of availiable model life stages.
     """
