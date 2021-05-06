@@ -361,9 +361,9 @@ typeguard = "^2.12.0"
 
 [package.source]
 type = "git"
-url = "https://github.com/viniciusmsousa/ds-toolbox"
+url = "https://github.com/viniciusmsousa/ds-toolbox.git"
 reference = "main"
-resolved_reference = "659a83d4f5bb6b70c87e6c2d23bd0692458c31af"
+resolved_reference = "bf7b561681e9bf6844c3ab1724fb222ac61b554b"
 
 [[package]]
 name = "email-validator"
@@ -2498,7 +2498,7 @@ scipy = ">=1.0.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8, <3.10"
-content-hash = "f013c7e515b511daa1cc9812a25ee650cee8ad795c40c82d421a54b441a90ce6"
+content-hash = "68f8dffa3354fc31f9591fe13a9b815f7e7ad0bc77313cc9a9e3ff47728e47d3"
 
 [metadata.files]
 aiofiles = [

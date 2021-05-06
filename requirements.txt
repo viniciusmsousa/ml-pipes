@@ -28,7 +28,7 @@ decorator==4.4.2; python_version >= "3.7" and python_full_version < "3.0.0" or p
 defusedxml==0.7.1; python_version >= "3.8" and python_full_version < "3.0.0" and python_version < "3.10" or python_version >= "3.8" and python_version < "3.10" and python_full_version >= "3.5.0"
 dnspython==2.1.0; python_version >= "3.6"
 docker==4.2.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-ds-toolbox @ git+https://github.com/viniciusmsousa/ds-toolbox@main ; python_version >= "3.8" and python_version < "3.10"
+ds-toolbox @ git+https://github.com/viniciusmsousa/ds-toolbox.git@main ; python_version >= "3.8" and python_version < "3.10"
 email-validator==1.1.2; python_version >= "3.6"
 entrypoints==0.3; python_version >= "3.8" and python_version < "3.10"
 fastapi==0.63.0; python_version >= "3.6"

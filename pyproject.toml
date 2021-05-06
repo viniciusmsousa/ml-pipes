@@ -13,8 +13,8 @@ matplotlib = "^3.4.1"
 loguru = "^0.5.3"
 typeguard = "^2.12.0"
 pycaret = "^2.3.0"
-ds-toolbox = {git = "https://github.com/viniciusmsousa/ds-toolbox", rev = "main"}
 fastapi = {extras = ["all"], version = "^0.63.0"}
+ds-toolbox = {git = "https://github.com/viniciusmsousa/ds-toolbox.git", rev = "main"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
