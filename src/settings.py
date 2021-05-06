@@ -4,6 +4,10 @@ PATH_CREDIT_CARD_DATASET = "dao/data/"
 TRACKING_URI = 'sqlite:///mlruns.db'
 
 # Model Contex
+MODEL_LIFE_STAGES = {
+    'production': 'production',
+    'staging': 'staging'
+}
 THRESHOLD = 0.5
 CHAMPION_METRIC = 'ks'
 CREDIT_CARD_MODEL_NAME = EXPERIMENT_NAME
