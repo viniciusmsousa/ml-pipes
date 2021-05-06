@@ -91,6 +91,8 @@ class CreditModelObservations(BaseModel):
 ## Defining List models end point
 @app.get('/models/list')
 def list_available_models():
+    """Lists availiable models to be invoked.
+    """
     dict_models = dict()
     for model in client.list_registered_models():
         d = dict(model)
@@ -102,6 +104,11 @@ def list_available_models():
 ## Defining Prediction end point
 @app.post("/models/prediction/{model_name}/{model_life_stage}")
 def make_predictions(model_name: ModelName, model_life_stage: ModelLifeStage, observation: CreditModelObservations):
+    """Makes the predictions using the selected model.
+
+    Raises:
+        HTTPException: Status 404 if selected model life stage is not availiable.
+    """
     df_to_be_predicted = pd.read_json(observation.json())
 
     if model_name == CREDIT_CARD_MODEL_NAME:
