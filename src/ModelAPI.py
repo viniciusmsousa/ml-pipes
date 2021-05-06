@@ -15,10 +15,12 @@ from settings import CREDIT_CARD_MODEL_NAME, TRACKING_URI, MODEL_LIFE_STAGES
 from dao.CreditCardDefault import write_predictions
 
 
-# Loading MLFlow Models
+# Seting MLFlow
 mlflow.set_tracking_uri(TRACKING_URI)
+client = mlflow.tracking.MlflowClient()
 
-## Credit Card Models
+### Loading Models
+### Credit Card Models
 try:
     credit_card_production_model = mlflow.pyfunc.load_model(
         model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/production"
@@ -86,13 +88,20 @@ class CreditModelObservations(BaseModel):
     Amount: List[float]
     id: List[int]
 
-## Defining Prediction End Point
+## Defining List models end point
+@app.get('/models/list')
+def list_available_models():
+    dict_models = dict()
+    for model in client.list_registered_models():
+        d = dict(model)
+        d = {key: d[key] for key in ['name','description']}
+        d = {d['name']: d['description']}
+    dict_models.update(d)
+    return dict_models
+
+## Defining Prediction end point
 @app.post("/models/prediction/{model_name}/{model_life_stage}")
-def invoke_prediction(
-    model_name: ModelName,
-    model_life_stage: ModelLifeStage,
-    observation: CreditModelObservations
-):
+def make_predictions(model_name: ModelName, model_life_stage: ModelLifeStage, observation: CreditModelObservations):
     df_to_be_predicted = pd.read_json(observation.json())
 
     if model_name == CREDIT_CARD_MODEL_NAME:
