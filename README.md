@@ -121,7 +121,7 @@ You can now the check the swagger documentation at [http://127.0.0.1:5001/docs](
 }
 ```
 
-even though this will do the trick, a more robust way to serve the model API and Tracking UI together using the Docker framework. This is done in through the `Dockerfile` and `docker-compose.yml`. To start the UI and Api simple execute the following command in the **root** project directory
+Even though this will do the trick, a more robust way to serve the model API and Tracking UI together is using the Docker framework. This is done in through the `Dockerfile` and `docker-compose.yml`. To start the UI and Api simple execute the following command in the **root** project directory
 ```
 docker-compose up
 ```
