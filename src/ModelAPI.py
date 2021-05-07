@@ -88,6 +88,11 @@ class CreditModelObservations(BaseModel):
     Amount: List[float]
     id: List[int]
 
+## Root End Point
+@app.get('/')
+def hello():
+    return 'Hello! Your ML Api is up and running :)'
+
 ## Defining List models end point
 @app.get('/models/list')
 def list_available_models():
