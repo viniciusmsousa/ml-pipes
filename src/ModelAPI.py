@@ -1,51 +1,49 @@
 from datetime import datetime
-import json
-from typing import Optional, List
+from typing import List
 from loguru import logger
-logger.add('../logs/logs.log', rotation = '5 MB', level="INFO")
-
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from enum import Enum
-
 import pandas as pd
 import mlflow
+from settings import CREDIT_CARD_MODEL_NAME, \
+    TRACKING_URI, MODEL_LIFE_STAGES  # pylint: disable=import-error
+from dao.CreditCardDefault \
+    import write_predictions  # pylint: disable=import-error
 
-from settings import CREDIT_CARD_MODEL_NAME, TRACKING_URI, MODEL_LIFE_STAGES    
-from dao.CreditCardDefault import write_predictions
-
+logger.add('../logs/logs.log', rotation='5 MB', level="INFO")
 
 # Seting MLFlow
 mlflow.set_tracking_uri(TRACKING_URI)
 client = mlflow.tracking.MlflowClient()
 
-### Loading Models
-### Credit Card Models
+# Loading Models
 try:
     credit_card_production_model = mlflow.pyfunc.load_model(
         model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/production"
     )
-except:
-    logger.info(f'No {CREDIT_CARD_MODEL_NAME} production model found.')
-    pass
+except Exception as e:
+    logger.error(f'No {CREDIT_CARD_MODEL_NAME} production model found.')
+    logger.error(e)
 
 try:
     credit_card_staging_model = mlflow.pyfunc.load_model(
         model_uri=f"models:/{CREDIT_CARD_MODEL_NAME}/staging"
     )
-except:
-    logger.info(f'No {CREDIT_CARD_MODEL_NAME} staging model found.')
-    pass
+except Exception as e:
+    logger.error(f'No {CREDIT_CARD_MODEL_NAME} production model found.')
+    logger.error(e)
 
 
 # SettingServing the API
 app = FastAPI(title='Ml-Pipes')
 
-## Defining Data Structures
+
 class ModelName(str, Enum):
     """List of availiable models.
     """
     creditCardDefault = CREDIT_CARD_MODEL_NAME
+
 
 class ModelLifeStage(str, Enum):
     """List of availiable model life stages.
@@ -53,8 +51,9 @@ class ModelLifeStage(str, Enum):
     production = MODEL_LIFE_STAGES['production']
     staging = MODEL_LIFE_STAGES['staging']
 
+
 class CreditModelObservations(BaseModel):
-    """Defining the Data Structure of observations 
+    """Defining the Data Structure of observations
     to be predicted with the CreditCardModel.
     """
     V1: List[float]
@@ -88,12 +87,14 @@ class CreditModelObservations(BaseModel):
     Amount: List[float]
     id: List[int]
 
-## Root End Point
+
+# Root End Point
 @app.get('/')
 def hello():
     return 'Hello! Your ML Api is up and running :)'
 
-## Defining List models end point
+
+# Defining List models end point
 @app.get('/models/list')
 def list_available_models():
     """Lists availiable models to be invoked.
@@ -101,35 +102,48 @@ def list_available_models():
     dict_models = dict()
     for model in client.list_registered_models():
         d = dict(model)
-        d = {key: d[key] for key in ['name','description']}
+        d = {key: d[key] for key in ['name', 'description']}
         d = {d['name']: d['description']}
     dict_models.update(d)
     return dict_models
 
-## Defining Prediction end point
+
+# Defining Prediction end point
 @app.post("/models/prediction/{model_name}/{model_life_stage}")
-def make_predictions(model_name: ModelName, model_life_stage: ModelLifeStage, observation: CreditModelObservations):
+def make_predictions(
+    model_name: ModelName, model_life_stage: ModelLifeStage,
+    observation: CreditModelObservations
+):
     """Makes the predictions using the selected model.
 
     Raises:
-        HTTPException: Status 404 if selected model life stage is not availiable.
+        HTTPException: Status 404 if selected
+        model life stage is not availiable.
     """
     df_to_be_predicted = pd.read_json(observation.json())
 
     if model_name == CREDIT_CARD_MODEL_NAME:
         if model_life_stage == MODEL_LIFE_STAGES['production']:
             try:
-                prediction = credit_card_production_model.predict(df_to_be_predicted.drop(columns=['id']))
-            except:
-                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of {model_name} model found.')
+                prediction = credit_card_production_model\
+                    .predict(df_to_be_predicted.drop(columns=['id']))
+            except Exception:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f'{model_life_stage} of {model_name} not found.'
+                )
         else:
             try:
-                prediction = credit_card_staging_model.predict(df_to_be_predicted.drop(columns=['id']))
-            except:
-                raise HTTPException(status_code=404, detail=f'No {model_life_stage} of {model_name} model found.')
-        
+                prediction = credit_card_staging_model\
+                    .predict(df_to_be_predicted.drop(columns=['id']))
+            except Exception:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f'{model_life_stage} of {model_name} not found.'
+                )
+
         df_with_predictions = df_to_be_predicted
-        if type(prediction)==pd.DataFrame:
+        if type(prediction) == pd.DataFrame:
             df_with_predictions['prediction'] = prediction.predict
         else:
             df_with_predictions['prediction'] = prediction
@@ -139,5 +153,5 @@ def make_predictions(model_name: ModelName, model_life_stage: ModelLifeStage, ob
     df_with_predictions['date'] = str(datetime.today())[:19]
     df_with_predictions['model_life_stage'] = model_life_stage
     write_predictions(df_with_predictions)
-    
-    return  df_with_predictions[['id', 'prediction']].to_dict('list')
+
+    return df_with_predictions[['id', 'prediction']].to_dict('list')
