@@ -22,6 +22,8 @@ notebook = "^6.3.0"
 ipykernel = "^5.5.3"
 bandit = "^1.7.0"
 jupyter = "^1.0.0"
+pylint = "^2.8.2"
+flake8 = "^3.9.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
