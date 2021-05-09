@@ -1,11 +1,14 @@
 from datetime import datetime
 from typing import List
+
 from loguru import logger
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from enum import Enum
+
 import pandas as pd
 import mlflow
+
 from settings import CREDIT_CARD_MODEL_NAME, \
     TRACKING_URI, MODEL_LIFE_STAGES  # pylint: disable=import-error
 from dao.CreditCardDefault \
