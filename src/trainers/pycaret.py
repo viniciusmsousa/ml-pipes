@@ -71,12 +71,12 @@ class PycaretClassifier:
 
     def mlflow_runs(self):
         try:
-            ## 1) Setup the Experiment
+            # 1) Setup the Experiment
             experiment = PycaretClassifierModule.setup(
-                experiment_name = self.experiment_name,
-                silent = True,
-                data = self.df,
-                target = self.target,
+                experiment_name=self.experiment_name,
+                silent=True,
+                data=self.df,
+                target=self.target,
                 data_split_stratify = self.data_split_stratify,
                 # Changes the magnitude of features (features with values in similar order)
                 normalize = self.normalize,
