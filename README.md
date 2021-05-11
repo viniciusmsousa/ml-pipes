@@ -23,7 +23,7 @@ ml-pipes
    ├─ settings.py
    ├─ dao
    │  └─ CreditCardDefault.py
-   ├─ RunExperiment.py
+   ├─ RunExperiment.ipynb
    ├─ trainers
    │  ├─ h2o_automl.py
    │  └─ pycaret.py
@@ -54,7 +54,7 @@ Once this is done you can now move to the next step.
 
 MLFlow is built upon the concept of experiments. Where each experiment consists of a series of runs, each run being a candidate model, aka, a fit in the training dataset. 
 
-Here we will try to predict a credit card default using the [Kaggle credit card fraud dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud) and we will do that by running a H2O AutoMl model and Pycaret sklearn models as well. Finally, we will set to production the one with the highest [KS Metric](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test). All of this is done by executing the `src/RunExperiment.py` script (make sure you run it inside the `src/` folder). Take a few minutes and go through the script to understand how this is done, as you will see the script basically does:
+Here we will try to predict a credit card default using the [Kaggle credit card fraud dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud) and we will do that by running a H2O AutoMl model and Pycaret sklearn models as well. Finally, we will set to production the one with the highest [KS Metric](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test). All of this is done by executing the `src/RunExperiment.ipynb` file. Take a few minutes and go through the notebbok to understand how this is done, as you will see the script basically does:
 
 1) Setup and MLFLow Experiemnt;
 2) Load the Credit Card dataset;
