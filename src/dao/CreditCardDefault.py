@@ -1,6 +1,7 @@
 import os
 import pandas as pd
-from settings import PATH_CREDIT_CARD_DATASET, PATH_SAVE_PREDICTIONS
+from settings import PATH_SAVE_PREDICTIONS
+PATH_CREDIT_CARD_DATASET = "dao/data/"
 
 def load_creditcard_dataset():
     try:
