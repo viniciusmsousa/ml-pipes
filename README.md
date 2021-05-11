@@ -23,7 +23,7 @@ ml-pipes
    ├─ settings.py
    ├─ dao
    │  └─ CreditCardDefault.py
-   ├─ RunExperiment.py
+   ├─ RunExperiment.ipynb
    ├─ trainers
    │  ├─ h2o_automl.py
    │  └─ pycaret.py
