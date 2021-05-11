@@ -14,7 +14,6 @@ from mlflow.tracking import MlflowClient
 from ds_toolbox.statistics import ks_test
 
 
-
 def compute_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target: str, print_metrics: bool = False):
     try:
         # Confusion Matrix
