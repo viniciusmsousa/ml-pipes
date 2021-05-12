@@ -13,6 +13,7 @@ import mlflow.spark
 from ds_toolbox.statistics import ks_test
 
 
+@typechecked
 def classification_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target: str, print_metrics: bool = False):
     """Function to compute a few binary classification metrics from a spark df.
 
