@@ -62,6 +62,34 @@ def compute_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target:
     except Exception as e:
         raise Exception(e)
 
+@typechecked
+def init_spark_session(max_mem_size: int = 4, n_cores: int = 4):
+    """Initialize a local Spark Session.
+
+    Args:
+        max_mem_size (int, optional): Max Memory in GB to be allocated to Spark. Defaults to 4.
+        n_cores (int, optional): Cores to be allocated to Spark. Defaults to 4.
+
+    Raises:
+        Exception: All Erros.
+
+    Returns:
+        Spark Session Object: Spark Session Object
+    """
+    try:
+        mem_size = f'{max_mem_size}G'
+
+        spark = SparkSession.builder\
+            .appName('Ml-Pipes') \
+            .master(f'local[{n_cores}]') \
+            .config('spark.executor.memory', mem_size) \
+            .config('spark.driver.memory', mem_size) \
+            .config('spark.memory.offHeap.enabled','true') \
+            .config('spark.memory.offHeap.size',mem_size) \
+            .getOrCreate()
+        return spark
+    except Exception as e:
+        raise Exception(e)
 
 class SparkClassifier:
     """
@@ -73,7 +101,7 @@ class SparkClassifier:
         df: pd.DataFrame,
         target_col: str,
         run_name: str = 'spark_classifier',
-        max_mem_size: str = '4G',
+        max_mem_size: int = 4,
         n_cores: int = 4,
         seed: int = 90
     ):
@@ -97,7 +125,7 @@ class SparkClassifier:
         self.seed = seed
 
         # 1) Starting Spark Session
-        self.spark = self.start_spark()
+        self.spark = init_spark_session(n_cores=self.n_cores, max_mem_size=self.max_mem_size)
         
         # 2) Getting Features Cols
         self.feature_cols = self.get_feature_cols()
@@ -108,20 +136,6 @@ class SparkClassifier:
         self.logistic_regression = self.logistic_regression()
 
         self.shutdown_spark()
-
-    def start_spark(self):
-        try:
-            spark = SparkSession.builder\
-                .appName('Ml-Pipes') \
-                .master(f'local[{self.n_cores}]') \
-                .config("spark.executor.memory", self.max_mem_size) \
-                .config("spark.driver.memory", self.max_mem_size) \
-                .config("spark.memory.offHeap.enabled",'true') \
-                .config("spark.memory.offHeap.size",self.max_mem_size) \
-                .getOrCreate()
-            return spark
-        except Exception as e:
-            raise Exception(e)
 
     def get_feature_cols(self):
         try:
