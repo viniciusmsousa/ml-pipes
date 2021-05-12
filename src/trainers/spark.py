@@ -5,7 +5,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.classification import LogisticRegression,  DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
+from pyspark.ml.classification import LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
 
 import mlflow
 import mlflow.spark
@@ -40,7 +40,7 @@ def classification_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_
         accuracy = (TN + TP) / (TN + TP + FN + FP)
         precision = TP/(TP+FP) if (TP+FP) > 0 else 0
         recall = TP/(TP+FN)
-        f1 = 2*(precision*recall/(precision+recall)) if (precision+recall) >  else 0
+        f1 = 2*(precision*recall/(precision+recall)) if (precision+recall) > 0 else 0
 
         # PySpark (2.3.4) Evaluation Metrics
         evaluator = BinaryClassificationEvaluator(labelCol=col_target)
@@ -146,7 +146,7 @@ class SparkClassifier:
         # 3) Getting spark dataframe
         self.dfs_train, self.dfs_test = self.transform_spark()
 
-        self.logistic_regression = self.logistic_regression()
+        self.classfiers = self.classfiers()
 
         self.shutdown_spark()
 
@@ -167,25 +167,37 @@ class SparkClassifier:
             raise Exception(e)
 
 
-    def logistic_regression(self):
+    def classfiers(self):
         try:
             lr = LogisticRegression(labelCol=self.target_col, featuresCol='features')
-            model = lr.fit(self.dfs_train)
-            prediction = model.transform(self.dfs_test)
-            metrics = classification_metrics(dfs_prediction=prediction, col_target=self.target_col, print_metrics=False)
-
-            with mlflow.start_run(run_name=f'{self.run_name}_logistic_regression') as run:
-
-                mlflow.log_metric("f1", metrics["f1"])
-                mlflow.log_metric("auc", metrics["auroc"])
-                mlflow.log_metric('accuracy', metrics["accuracy"])
-                mlflow.log_metric("precision", metrics["precision"])
-                mlflow.log_metric("recall", metrics["recall"]) 
-                mlflow.log_metric("ks", metrics["ks"]["max_ks"])
+            lr_model = lr.fit(self.dfs_train)
             
-                mlflow.spark.log_model(model, "model")
+            dt = DecisionTreeClassifier(labelCol=self.target_col, featuresCol='features')
+            dt_model = dt.fit(self.dfs_train)
 
-                return run.info
+            rf = RandomForestClassifier(labelCol=self.target_col, featuresCol='features')
+            rf_model = rf.fit(self.dfs_train)
+
+            gbt = GBTClassifier(labelCol=self.target_col, featuresCol='features')
+            gbt_model = gbt.fit(self.dfs_train)
+
+            names = ['LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier', 'GBTClassifier']
+            models = [lr_model, dt_model, rf_model, gbt_model]
+            for name, model in zip(names, models):
+                prediction = model.transform(self.dfs_test)
+                metrics = classification_metrics(dfs_prediction=prediction, col_target=self.target_col, print_metrics=False)
+
+                with mlflow.start_run(run_name=f'{self.run_name}_{name}') as run:
+                    mlflow.log_metric("f1", metrics["f1"])
+                    mlflow.log_metric("auc", metrics["auroc"])
+                    mlflow.log_metric('accuracy', metrics["accuracy"])
+                    mlflow.log_metric("precision", metrics["precision"])
+                    mlflow.log_metric("recall", metrics["recall"]) 
+                    mlflow.log_metric("ks", metrics["ks"]["max_ks"])
+
+                    mlflow.spark.log_model(model, "model")
+
+            return 200
         except Exception as e:
             raise Exception(e)
 
