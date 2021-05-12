@@ -108,7 +108,9 @@ promise==2.3; python_version >= "3.6"
 prompt-toolkit==3.0.18; python_full_version >= "3.6.1" and python_version >= "3.8" and python_version < "3.10"
 protobuf==3.15.8; python_version >= "3.6"
 ptyprocess==0.7.0; python_version >= "3.8" and python_version < "3.10" and os_name != "nt" and sys_platform != "win32"
+py4j==0.10.9; python_version >= "3.6"
 py==1.10.0; python_version >= "3.8" and python_full_version < "3.0.0" and python_version < "3.10" and implementation_name == "pypy" or python_version >= "3.8" and python_version < "3.10" and implementation_name == "pypy" and python_full_version >= "3.4.0"
+pyarrow==4.0.0; python_version >= "3.6"
 pycaret==2.3.0
 pycparser==2.20; python_version >= "3.8" and python_full_version < "3.0.0" and python_version < "3.10" or python_version >= "3.8" and python_version < "3.10" and python_full_version >= "3.4.0"
 pydantic==1.8.1; python_full_version >= "3.6.1" and python_version >= "3.6"
@@ -119,6 +121,7 @@ pyod==0.8.7
 pyparsing==2.4.7; python_version >= "3.8" and python_full_version < "3.0.0" and python_version < "3.10" or python_full_version >= "3.5.0" and python_version >= "3.8" and python_version < "3.10"
 pypiwin32==223; sys_platform == "win32" and python_version >= "3.6" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6")
 pyrsistent==0.17.3; python_version >= "3.8" and python_version < "3.10"
+pyspark==3.1.1; python_version >= "3.6"
 python-dateutil==2.8.1; python_full_version >= "3.7.1" and python_version >= "3.8" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6") and (python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.7") and python_version < "3.10"
 python-dotenv==0.17.1
 python-editor==1.0.4; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
