@@ -1,9 +1,10 @@
+from typeguard import typechecked
 import pandas as pd
 import pyspark
 from pyspark.ml.feature import VectorAssembler
 import mlflow
 
-
+@typechecked
 def predictor(model: mlflow.pyfunc.PyFuncModel, spark: pyspark.sql.session.SparkSession, df: pd.DataFrame):
     try:        
         flavor = model._model_meta.to_dict()['flavors']['python_function']['loader_module']
