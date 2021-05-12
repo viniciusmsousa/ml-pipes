@@ -5,7 +5,7 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.classification import LogisticRegression#,  DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
+from pyspark.ml.classification import LogisticRegression,  DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
 
 import mlflow
 import mlflow.spark
@@ -38,9 +38,9 @@ def classification_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_
 
         # Computing Metrics from Confusion Matrix
         accuracy = (TN + TP) / (TN + TP + FN + FP)
-        precision = TP/(TP+FP)
+        precision = TP/(TP+FP) if (TP+FP) > 0 else 0
         recall = TP/(TP+FN)
-        f1 = 2*(precision*recall/(precision+recall))
+        f1 = 2*(precision*recall/(precision+recall)) if (precision+recall) >  else 0
 
         # PySpark (2.3.4) Evaluation Metrics
         evaluator = BinaryClassificationEvaluator(labelCol=col_target)
