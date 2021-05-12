@@ -9,8 +9,8 @@ from enum import Enum
 import pandas as pd
 import mlflow
 
-from trainers.prediction import predictor
 from trainers.spark import init_spark_session
+from trainers.prediction import predictor
 from settings import CREDIT_CARD_MODEL_NAME, \
     TRACKING_URI, MODEL_LIFE_STAGES  # pylint: disable=import-error
 from dao.CreditCardDefault \
@@ -128,16 +128,16 @@ def make_predictions(
         HTTPException: Status 404 if selected
         model life stage is not availiable.
     """
-    df_to_be_predicted = pd.read_json(observation.json())
+    df = pd.read_json(observation.json())
 
     if model_name == CREDIT_CARD_MODEL_NAME:
         if model_life_stage == MODEL_LIFE_STAGES['production']:
             try:
-                df_with_predictions = predictor(
+                predictions = predictor(
                     model=credit_card_production_model,
                     spark=spark,
-                    df=df_to_be_predicted.drop(columns=['id'])
-                ) 
+                    df=df.drop(columns=['id'])
+                )
             except Exception:
                 raise HTTPException(
                     status_code=404,
@@ -145,19 +145,20 @@ def make_predictions(
                 )
         else:
             try:
-                df_with_predictions = predictor(
+                predictions = predictor(
                     model=credit_card_staging_model,
                     spark=spark,
-                    df=df_to_be_predicted.drop(columns=['id'])
-                ) 
+                    df=df.drop(columns=['id'])
+                )
             except Exception:
                 raise HTTPException(
                     status_code=404,
                     detail=f'{model_life_stage} of {model_name} not found.'
                 )
 
-    df_with_predictions['date'] = str(datetime.today())[:19]
-    df_with_predictions['model_life_stage'] = model_life_stage
-    write_predictions(df_with_predictions)
+    df['prediction'] = predictions
+    df['date'] = str(datetime.today())[:19]
+    df['model_life_stage'] = model_life_stage
+    write_predictions(df)
 
-    return df_with_predictions[['id', 'prediction']].to_dict('list')
+    return df[['id', 'prediction']].to_dict('list')

@@ -5,25 +5,22 @@ import mlflow
 
 
 def predictor(model: mlflow.pyfunc.PyFuncModel, spark: pyspark.sql.session.SparkSession, df: pd.DataFrame):
-    try:
-        df_with_predictions = df.copy()
-
+    try:        
         flavor = model._model_meta.to_dict()['flavors']['python_function']['loader_module']
-        
+
         if flavor == 'mlflow.spark':
-            dfs_predict = spark.createDataFrame(df.drop('Class', axis=1))
+            dfs_predict = spark.createDataFrame(df)
             assembler = VectorAssembler(inputCols=dfs_predict.columns, outputCol='features')
             dfs_predict = assembler.transform(dfs_predict)
-            df_with_predictions['prediction'] = model.predict(dfs_predict.toPandas())
-
+            predictions = model.predict(dfs_predict.toPandas())
+            
         elif flavor == 'mlflow.h2o':
-            df_with_predictions['prediction'] = model.predict(df.drop('Class', axis=1)).prediction
-        
+            predictions = model.predict(df).predict
         elif flavor == 'mlflow.sklearn':
-            df_with_predictions['prediction'] = model.predict(df.drop('Class', axis=1))
+            predictions = model.predict(df)
         else:
             pass
         
-        return df_with_predictions
+        return predictions
     except Exception as e:
         raise Exception(e)
