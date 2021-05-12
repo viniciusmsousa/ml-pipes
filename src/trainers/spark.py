@@ -3,7 +3,6 @@ import pandas as pd
 
 import pyspark
 from pyspark.sql import SparkSession
-# from pyspark.sql import functions as F
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import LogisticRegression#,  DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
@@ -14,7 +13,20 @@ import mlflow.spark
 from ds_toolbox.statistics import ks_test
 
 
-def compute_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target: str, print_metrics: bool = False):
+def classification_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target: str, print_metrics: bool = False):
+    """Function to compute a few binary classification metrics from a spark df.
+
+    Args:
+        dfs_prediction (pyspark.sql.dataframe.DataFrame): SparkDataFrame with label and prediction columns.
+        col_target (str): Label colum name.
+        print_metrics (bool, optional): Whether or not to print the metrics. Defaults to False.
+
+    Raises:
+        Exception: Erros.
+
+    Returns:
+        dict: Dict with metrics.
+    """
     try:
         # Confusion Matrix
         confusion_matrix = dfs_prediction.groupBy(col_target, "prediction").count()
@@ -159,7 +171,7 @@ class SparkClassifier:
             lr = LogisticRegression(labelCol=self.target_col, featuresCol='features')
             model = lr.fit(self.dfs_train)
             prediction = model.transform(self.dfs_test)
-            metrics = compute_metrics(dfs_prediction=prediction, col_target=self.target_col, print_metrics=False)
+            metrics = classification_metrics(dfs_prediction=prediction, col_target=self.target_col, print_metrics=False)
 
             with mlflow.start_run(run_name=f'{self.run_name}_logistic_regression') as run:
 
