@@ -26,7 +26,7 @@ def predictor(
     Returns:
         list|array: List of predictions for each rows from df.
     """
-    try:        
+    try:
         flavor = model\
             ._model_meta\
             .to_dict()['flavors']['python_function']['loader_module']
