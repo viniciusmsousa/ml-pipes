@@ -9,6 +9,8 @@ from enum import Enum
 import pandas as pd
 import mlflow
 
+from trainers.prediction import predictor
+from trainers.spark import init_spark_session
 from settings import CREDIT_CARD_MODEL_NAME, \
     TRACKING_URI, MODEL_LIFE_STAGES  # pylint: disable=import-error
 from dao.CreditCardDefault \
@@ -19,6 +21,10 @@ logger.add('../logs/logs.log', rotation='5 MB', level="INFO")
 # Seting MLFlow
 mlflow.set_tracking_uri(TRACKING_URI)
 client = mlflow.tracking.MlflowClient()
+
+# Spark Session
+spark = init_spark_session()
+
 
 # Loading Models
 try:
@@ -36,7 +42,6 @@ try:
 except Exception as e:
     logger.error(f'No {CREDIT_CARD_MODEL_NAME} production model found.')
     logger.error(e)
-
 
 # SettingServing the API
 app = FastAPI(title='Ml-Pipes')
@@ -128,8 +133,11 @@ def make_predictions(
     if model_name == CREDIT_CARD_MODEL_NAME:
         if model_life_stage == MODEL_LIFE_STAGES['production']:
             try:
-                prediction = credit_card_production_model\
-                    .predict(df_to_be_predicted.drop(columns=['id']))
+                df_with_predictions = predictor(
+                    model=credit_card_production_model,
+                    spark=spark,
+                    df=df_to_be_predicted.drop(columns=['id'])
+                ) 
             except Exception:
                 raise HTTPException(
                     status_code=404,
@@ -137,21 +145,16 @@ def make_predictions(
                 )
         else:
             try:
-                prediction = credit_card_staging_model\
-                    .predict(df_to_be_predicted.drop(columns=['id']))
+                df_with_predictions = predictor(
+                    model=credit_card_staging_model,
+                    spark=spark,
+                    df=df_to_be_predicted.drop(columns=['id'])
+                ) 
             except Exception:
                 raise HTTPException(
                     status_code=404,
                     detail=f'{model_life_stage} of {model_name} not found.'
                 )
-
-        df_with_predictions = df_to_be_predicted
-        if type(prediction) == pd.DataFrame:
-            df_with_predictions['prediction'] = prediction.predict
-        else:
-            df_with_predictions['prediction'] = prediction
-    else:
-        pass
 
     df_with_predictions['date'] = str(datetime.today())[:19]
     df_with_predictions['model_life_stage'] = model_life_stage
