@@ -1,15 +1,15 @@
 from typeguard import typechecked
 import pandas as pd
+
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
+# from pyspark.sql import functions as F
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import LogisticRegression#,  DecisionTreeClassifier, RandomForestClassifier, GBTClassifier
 
 import mlflow
 import mlflow.spark
-from mlflow.tracking import MlflowClient
 
 from ds_toolbox.statistics import ks_test
 
@@ -50,7 +50,7 @@ def compute_metrics(dfs_prediction: pyspark.sql.dataframe.DataFrame, col_target:
             'ks': ks_dict
         }
         
-        if print_metrics == True:
+        if print_metrics is True:
             print(f'accuracy:  {round(out_dict["accuracy"], 4)}')
             print(f'precision: {round(out_dict["precision"], 4)}')
             print(f'recall:    {round(out_dict["recall"], 4)}')
