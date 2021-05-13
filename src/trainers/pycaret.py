@@ -3,7 +3,6 @@ from typeguard import typechecked
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-from mlflow.tracking import MlflowClient
 import pycaret.classification as PycaretClassifierModule
 from ds_toolbox.statistics import ks_test   
 
