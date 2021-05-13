@@ -60,8 +60,9 @@ Here we will try to predict a credit card default using the [Kaggle credit card 
 2) Load the Credit Card dataset;
 3) Trains an H2O AutoML;
 4) Trains sklearn classifiers, using PyCaret interface;
-5) Select the best model according to the CHAMPION_METRIC;
-6) Set the best model the production stage (to better understand this stage make sure to check the [MLFlow Model Registery Documentation](https://www.mlflow.org/docs/latest/model-registry.html)).
+5) Trains 4 spark classifiers;
+6) Select the best model according to the CHAMPION_METRIC;
+7) Set the best model the production stage (to better understand this stage make sure to check the [MLFlow Model Registery Documentation](https://www.mlflow.org/docs/latest/model-registry.html)).
 
 Once the experiment finished running you can deploy the [MLFlow Tracking UI](https://www.mlflow.org/docs/latest/tracking.html#tracking-ui) locally by running in the terminal (inside the `src/` folder) the following command: 
 
