@@ -7,7 +7,7 @@ authors = ["viniciusmsousa <vinisousa04@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.8, <3.10"
 pandas = "^1.2.3"
-mlflow = "^1.15.0"
+mlflow = "^1.17.0"
 h2o = "^3.32.1"
 matplotlib = "^3.4.1"
 loguru = "^0.5.3"
