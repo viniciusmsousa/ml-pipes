@@ -1,22 +1,41 @@
 version: "3.9"
 services:
-    tracking_ui:
+    postgres_db:
+        environment:
+            POSTGRES_DB: $POSTGRES_DB
+            POSTGRES_USER: $POSTGRES_USER
+            POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+            MLFLOW_ARTIFACT_STORE: $MLFLOW_ARTIFACT_STORE
+        image: postgres
+        networks: 
+            - mlflow
+        ports:
+            - "5432:5432"
+    mlflow_tracking:
+        # environment:
+        #     MLFLOW_ARTIFACT_STORE = $MLFLOW_ARTIFACT_STORE
+        depends_on: 
+            - postgres_db
         image: ml-pipes
         build: 
             context: .
             dockerfile: Dockerfile
-        command: mlflow ui --host 0.0.0.0 -p 5000 --backend-store-uri sqlite:///mlruns.db
         volumes: 
             - ./:/usr/app
         ports:
             - "5000:5000"
-    model_api_production:
-        image: ml-pipes
-        command: uvicorn ModelAPI:app --host 0.0.0.0 --port 5001 --reload
-        volumes:
-            - ./:/usr/app
-        ports:
-            - "5001:5001"
-        depends_on: 
-            - tracking_ui
-            
+        networks: 
+            - mlflow
+        command: 
+            - sh 
+            - -c
+            - mlflow server
+                --host 0.0.0.0 
+                --port 5000 
+                --backend-store-uri postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres_db:5432/$POSTGRES_DB 
+                --default-artifact-root /mlflow_artifact_store
+networks: 
+    mlflow:
+        name: mlflow
+# volumes: 
+#     mlflow_artifact_store:
