@@ -1,7 +1,7 @@
 # Experiment Context
 EXPERIMENT_NAME = "CreditCardDefault"
 PATH_SAVE_PREDICTIONS = '../prediction_data/'
-TRACKING_URI = 'sqlite:///mlruns.db'
+TRACKING_URI = 'http://127.0.0.1:5000'
 
 # Model Contex
 MODEL_LIFE_STAGES = {

@@ -128,3 +128,41 @@ docker-compose up
 ```
 
 When you run for the first time this should take a while, since it will build the docker image and then deploy the containers. If everything was done correctly, then you have acess in port 5000 the UI tracking and in 5001 the production model, but now serving each service as a separated container.
+
+
+```
+docker run --name postgresql-container -p 5432:5432 -e POSTGRES_PASSWORD=test1234 -d postgres
+
+docker run --name teste-pgadmin -p 80:80 -e "PGADMIN_DEFAULT_EMAIL=renatogroff@yahoo.com.br" -e "PGADMIN_DEFAULT_PASSWORD=PgAdmin2018!" -d dpage/pgadmin4
+
+docker run -p 15432:80 \
+    -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
+    -d dpage/pgadmin4
+
+
+hostname -I
+
+mlflow ui -p 5000 --backend-store-uri postgresql+psycopg2://postgres:test1234@192.168.15.3:5432/test_mlflow
+```
+
+```
+# 1a) Subir banco para armazenar dados dos experimentos
+docker run --name pg-docker -e POSTGRES_PASSWORD=test1234 -d -p 5432:5432 postgres
+
+
+
+
+# 1b) Subir o PGAdmin (e criar um schema para o MLFlow?)
+docker run --name pgadmin -p 15432:80 \
+    -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' \
+    -d dpage/pgadmin4
+
+
+# 2)  Subir Tracking Server do MLFlow
+mlflow server -p 5000 --backend-store-uri postgresql+psycopg2://postgres:test1234@localhost/ --default-artifact-root /media/vinicius/Dados/projects/ml-pipes/mlflow_files
+
+
+
+```

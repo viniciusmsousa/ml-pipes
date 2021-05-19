@@ -5,15 +5,12 @@ services:
             POSTGRES_DB: $POSTGRES_DB
             POSTGRES_USER: $POSTGRES_USER
             POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-            MLFLOW_ARTIFACT_STORE: $MLFLOW_ARTIFACT_STORE
         image: postgres
         networks: 
             - mlflow
         ports:
             - "5432:5432"
     mlflow_tracking:
-        # environment:
-        #     MLFLOW_ARTIFACT_STORE = $MLFLOW_ARTIFACT_STORE
         depends_on: 
             - postgres_db
         image: ml-pipes
@@ -21,21 +18,18 @@ services:
             context: .
             dockerfile: Dockerfile
         volumes: 
-            - ./:/usr/app
+            - ./:/usr/app/
         ports:
             - "5000:5000"
         networks: 
             - mlflow
         command: 
             - sh 
-            - -c
             - mlflow server
                 --host 0.0.0.0 
                 --port 5000 
                 --backend-store-uri postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres_db:5432/$POSTGRES_DB 
-                --default-artifact-root /mlflow_artifact_store
+                --default-artifact-root $MLFLOW_ARTIFACT_STORE
 networks: 
     mlflow:
         name: mlflow
-# volumes: 
-#     mlflow_artifact_store:

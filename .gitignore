@@ -150,3 +150,5 @@ src/remove_mlruns.sh
 logs/
 prediction_data/
 !src/RunExperiment.ipynb
+mlflow_artifact_store/
+secret/
