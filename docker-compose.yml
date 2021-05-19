@@ -1,5 +1,29 @@
 version: "3.9"
 services:
+    minio:
+        image: minio/minio
+        ports:
+            - "9000:9000"
+        environment:
+            MINIO_ACCESS_KEY: $MINIO_ACCESS_KEY
+            MINIO_SECRET_KEY: $MINIO_SECRET_KEY
+        networks: 
+            - mlflow
+        command: server --address 0.0.0.0:9000 /data
+    createbuckets:
+        networks:
+            - mlflow
+        image: minio/mc
+        depends_on:
+            - minio
+        entrypoint: >
+            /bin/sh -c "
+            /usr/bin/mc config host add myminio http://minio:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY;
+            /usr/bin/mc rm -r --force myminio/mlflow;
+            /usr/bin/mc mb myminio/mlflow;
+            /usr/bin/mc policy download myminio/mlflow;
+            exit 0;
+            "
     postgres_db:
         environment:
             POSTGRES_DB: $POSTGRES_DB
@@ -11,25 +35,22 @@ services:
         ports:
             - "5432:5432"
     mlflow_tracking:
+        environment: 
+            MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+            AWS_ACCESS_KEY_ID: $MINIO_ACCESS_KEY
+            AWS_SECRET_ACCESS_KEY: $MINIO_SECRET_KEY
         depends_on: 
             - postgres_db
+            - minio
         image: ml-pipes
         build: 
             context: .
             dockerfile: Dockerfile
-        volumes: 
-            - ./:/usr/app/
         ports:
             - "5000:5000"
         networks: 
             - mlflow
-        command: 
-            - sh 
-            - mlflow server
-                --host 0.0.0.0 
-                --port 5000 
-                --backend-store-uri postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres_db:5432/$POSTGRES_DB 
-                --default-artifact-root $MLFLOW_ARTIFACT_STORE
+        command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres_db:5432/$POSTGRES_DB --default-artifact-root s3://mlflow
 networks: 
     mlflow:
         name: mlflow
