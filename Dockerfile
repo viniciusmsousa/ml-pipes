@@ -23,10 +23,3 @@ COPY . /usr/app
 
 # Installing App Dependencies
 RUN pip install -r requirements.txt
-
-# Export Variable
-ENV MLFLOW_TRACKING_URI=sqlite:///mlruns.db
-ARG MLFLOW_TRACKING_URI=sqlite:///mlruns.db
-
-# Set WorkDir to Run the Experiment
-WORKDIR /usr/app/src
