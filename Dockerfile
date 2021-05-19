@@ -13,7 +13,6 @@ RUN apt-get install -y git
 
 # Exposing Ports
 EXPOSE 5000
-EXPOSE 5001
 
 ## App Configuration
 # Changing Workdir
