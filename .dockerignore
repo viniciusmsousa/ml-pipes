@@ -3,3 +3,4 @@ src/remove_mlruns.sh
 *.log
 logs/
 prediction_data/
+mlflow_runs/
