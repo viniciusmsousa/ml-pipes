@@ -64,4 +64,8 @@ In a interface that looks like the image bellow
 
 ![uis](https://drive.google.com/uc?export=view&id=1FDUdV_V5bTzAbRLv9rhHDSdK-ZOe6HSH)
 
-The final part of this step is to create a bucket called `mlflow` through the minio UI. Now ML-Pipes is up and running. You can check the `example-model-development/RunExperiment.ipynb` file to see how you can use MLFlow to keep track of your models and decide the best model for the problem.
+The final part of this step is to create a bucket called `mlflow` through the minio UI.
+
+Now ML-Pipes is up and running and if you want to checkout how it was done check the `ml-pipes/docker-compose.yml`. Note that this architecture can be 'easily' reproduced in a cloud environment with a (i) relational database, (ii) an instance of the Mlflow server and (iii) a storage bucket.
+
+You can check the `example-model-development/RunExperiment.ipynb` file to see how you can use MLFlow to keep track of your models and decide the best model for the problem.
