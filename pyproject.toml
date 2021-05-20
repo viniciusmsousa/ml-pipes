@@ -19,6 +19,7 @@ pyarrow = "^4.0.0"
 ds-toolbox = {git = "https://github.com/viniciusmsousa/ds-toolbox.git", rev = "main"}
 psycopg2-binary = "^2.8.6"
 boto3 = "^1.17.76"
+python-dotenv = "^0.17.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

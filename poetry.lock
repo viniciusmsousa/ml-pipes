@@ -2737,7 +2737,7 @@ scipy = ">=1.0.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8, <3.10"
-content-hash = "9df18b88ea7903767e35ddc53c925d271aff8aee0a15e951494b0fe3c8e6ba6e"
+content-hash = "5a1c02c190e87f90727ea675c1eefca026ed0baed295528c7324d31b844138ea"
 
 [metadata.files]
 aiofiles = [
