@@ -1,5 +1,20 @@
 # ML-Pipes
 
+Ml-Pipes is named simply after a pipe, which is a tube of metal, plastic, or other material used to convey water, gas, oil, or other fluid substances. Here the 'substance' that is conveyed is not a fluid matter, but a machile learning model. 
+
+From experience, the steeper part of the Ml-Ops learning curve happens in the transition from running models in a given environment (local machine, jupyter server in a cloud provider, etc.) to keeping tracking of different experiments, deploying it, monitoring it and so on. On top of that, a production system would run on a cloud and that is another layer of complexity to deal with while trying to figure out how to buid a Ml-Ops environment.
+
+With that in mind the main objective of this repository is to provide a simple local (you won't need nothing beyond your computer and internet connection to set it up), but yet complete, example of what a end-to-end machine learning system could look like. The objective of doing it completely in a local machine is to abstract the cloud and infrastructure parts of the a Machine Learning system, but at the same it should be clear that the components used could be configured in a cloud provider. 
+
+## Ml-Pipes Architecture
+
+The image bellow depicts the architecture the this project build.
+
+
+
+![Architecture](https://drive.google.com/uc?export=view&id=<1O4E9a0XqAf9Sa9Z6z9TjlaAJW3aqV1ab>)
+
+
 This is a minimal ML project built with [MLFlow](https://www.mlflow.org/), [FastAPI](https://fastapi.tiangolo.com/) and [Docker](https://docs.docker.com/). The main objective os the project is to provide a self contained example of how to train and register models with MLFlow and deploy it through an API Service that allows us to save the predictions. It is recomends to check each framework documentation to have a detailed explanation of the components used here.
 
 
