@@ -9,21 +9,23 @@ services:
             MINIO_SECRET_KEY: $MINIO_SECRET_KEY
         networks: 
             - mlflow
+        volumes: 
+            - minio_bucket:/data
         command: server --address 0.0.0.0:9000 /data
-    createbuckets:
-        networks:
-            - mlflow
-        image: minio/mc
-        depends_on:
-            - minio
-        entrypoint: >
-            /bin/sh -c "
-            /usr/bin/mc config host add myminio http://minio:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY;
-            /usr/bin/mc rm -r --force myminio/mlflow;
-            /usr/bin/mc mb myminio/mlflow;
-            /usr/bin/mc policy download myminio/mlflow;
-            exit 0;
-            "
+    # createbuckets:
+    #     networks:
+    #         - mlflow
+    #     image: minio/mc
+    #     depends_on:
+    #         - minio
+    #     entrypoint: >
+    #         /bin/sh -c "
+    #         /usr/bin/mc config host add myminio http://minio:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY;
+    #         /usr/bin/mc rm -r --force myminio/mlflow;
+    #         /usr/bin/mc mb myminio/mlflow;
+    #         /usr/bin/mc policy download myminio/mlflow;
+    #         exit 0;
+    #         "
     postgres_db:
         environment:
             POSTGRES_DB: $POSTGRES_DB
@@ -54,3 +56,10 @@ services:
 networks: 
     mlflow:
         name: mlflow
+volumes:
+    minio_bucket:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $MINIO_ROOT_PATH
