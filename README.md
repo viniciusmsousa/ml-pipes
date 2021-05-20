@@ -10,11 +10,8 @@ With that in mind the main objective of this repository is to provide a simple l
 
 The image bellow depicts the architecture the this project build.
 
+![Architecture](https://drive.google.com/uc?export=view&id=1R2kr9dP8xVD76yKNIPtPTtEZhf9RUKd6)
 
-<a href="https://drive.google.com/uc?export=view&id=1O4E9a0XqAf9Sa9Z6z9TjlaAJW3aqV1ab"><img src="https://drive.google.com/uc?export=view&id=<1O4E9a0XqAf9Sa9Z6z9TjlaAJW3aqV1ab" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
-
-
-![Architecture](https://drive.google.com/uc?export=view&id=1O4E9a0XqAf9Sa9Z6z9TjlaAJW3aqV1ab)
 
 
 This is a minimal ML project built with [MLFlow](https://www.mlflow.org/), [FastAPI](https://fastapi.tiangolo.com/) and [Docker](https://docs.docker.com/). The main objective os the project is to provide a self contained example of how to train and register models with MLFlow and deploy it through an API Service that allows us to save the predictions. It is recomends to check each framework documentation to have a detailed explanation of the components used here.
