@@ -12,20 +12,6 @@ services:
         volumes: 
             - minio_bucket:/data
         command: server --address 0.0.0.0:9000 /data
-    # createbuckets:
-    #     networks:
-    #         - mlflow
-    #     image: minio/mc
-    #     depends_on:
-    #         - minio
-    #     entrypoint: >
-    #         /bin/sh -c "
-    #         /usr/bin/mc config host add myminio http://minio:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY;
-    #         /usr/bin/mc rm -r --force myminio/mlflow;
-    #         /usr/bin/mc mb myminio/mlflow;
-    #         /usr/bin/mc policy download myminio/mlflow;
-    #         exit 0;
-    #         "
     postgres_db:
         environment:
             POSTGRES_DB: $POSTGRES_DB
