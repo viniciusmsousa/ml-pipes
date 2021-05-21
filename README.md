@@ -16,7 +16,7 @@ The image bellow depicts the architecture of our Machine Learning System. The di
 
 The components inside the blue box are the ones that Ml-Pipes starts using the [Docker](https://docs.docker.com/) framework.
 
-![Architecture](https://drive.google.com/uc?export=view&id=1R2kr9dP8xVD76yKNIPtPTtEZhf9RUKd6)
+![Architecture](https://drive.google.com/uc?export=view&id=1NpnQcclBGRGNxwiyR7bPDpKT6hDxryME)
 
 ## Starting ML-Pipes
 
