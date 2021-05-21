@@ -31,7 +31,7 @@ services:
         image: ml-pipes
         build: 
             context: .
-            dockerfile: ./ml-pipes-tracking-server/Dockerfile
+            dockerfile: ./ml-pipes/Dockerfile
         ports:
             - "5000:5000"
         networks: 
