@@ -36,7 +36,7 @@ Or download the zip folder from github UI.
 
 It is need to define a few environment variables to make sure that the containers can communicate with each other. Specifically, it is required to (i) create a user and password so that MLFlow (component 2) can communicate with Postgres (component 3) e (ii) user and password so that components 1 (model development) and 2 (MLFlow) can access the Artifact Storage. And one last variable is the place in your machine where you want the files to be storage.
 
-Since the services are deployed with docker-compose the environment variables will be declared using [docker compose environment variables](https://docs.docker.com/compose/environment-variables/). Basiccaly, all you have to do is create a `.env` in the same directory of the `docker-compose.yml`, ml-pipes/ and define the variables as following:
+Since the services are deployed with docker-compose the environment variables will be declared using [docker compose environment variables](https://docs.docker.com/compose/environment-variables/). Basically, all you have to do is create a `.env` in the same directory of the `docker-compose.yml` and define the variables as following:
 
 ```
 POSTGRES_DB=<db_name>
@@ -56,7 +56,7 @@ The next step is to run the command
 docker-compose up
 ```
 
-inside the /ml-pipes. Once the images are build you should be able to access the following services:
+Once the images are build you should be able to access the following services:
 - MLFlow Server in [http://127.0.0.1:5000](http://127.0.0.1:5000);
 - Minio Server in [http://127.0.0.1:9000](http://127.0.0.1:9000).
 
@@ -66,6 +66,6 @@ In a interface that looks like the image bellow
 
 The final part of this step is to create a bucket called `mlflow` through the minio UI.
 
-Now ML-Pipes is up and running and if you want to checkout how it was done check the `ml-pipes/docker-compose.yml`. Note that this architecture can be 'easily' reproduced in a cloud environment with a (i) relational database, (ii) an instance of the Mlflow server and (iii) a storage bucket.
+After that ML-Pipes is up and running and if you want to checkout how it was done check the `docker-compose.yml`. Note that this architecture can be 'easily' reproduced in a cloud environment with a (i) relational database, (ii) an instance of the Mlflow server and (iii) a storage bucket.
 
 You can check the `example-model-development/RunExperiment.ipynb` file to see how you can use MLFlow to keep track of your models and decide the best model for the problem.
