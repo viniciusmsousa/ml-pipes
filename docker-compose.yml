@@ -10,23 +10,21 @@ services:
         networks: 
             - mlflow
         volumes: 
-            - minio_bucket:/data
+            - minio-bucket:/data
         command: server --address 0.0.0.0:9000 /data
     postgres-db:
+        image: postgres:alpine
+        ports:
+            - "5432:5432"
+        networks: 
+            - mlflow
+        volumes: 
+            - postgres-db:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: $POSTGRES_DB
             POSTGRES_USER: $POSTGRES_USER
             POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-        image: postgres
-        networks: 
-            - mlflow
-        ports:
-            - "5432:5432"
     tracking-server:
-        environment: 
-            MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-            AWS_ACCESS_KEY_ID: $MINIO_ACCESS_KEY
-            AWS_SECRET_ACCESS_KEY: $MINIO_SECRET_KEY
         depends_on: 
             - postgres-db
             - minio
@@ -38,14 +36,14 @@ services:
             - "5000:5000"
         networks: 
             - mlflow
+        environment: 
+            MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+            AWS_ACCESS_KEY_ID: $MINIO_ACCESS_KEY
+            AWS_SECRET_ACCESS_KEY: $MINIO_SECRET_KEY
         command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres-db:5432/$POSTGRES_DB --default-artifact-root s3://mlflow
 networks: 
     mlflow:
         name: mlflow
 volumes:
-    minio_bucket:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $MINIO_ROOT_PATH
+    minio-bucket:
+    postgres-db: 

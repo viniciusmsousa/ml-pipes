@@ -34,7 +34,7 @@ Or download the zip folder from github UI.
 
 ### 2) Configure Environment Variables
 
-It is need to define a few environment variables to make sure that the containers can communicate with each other. Specifically, it is required to (i) create a user and password so that MLFlow (component 2) can communicate with Postgres (component 3) e (ii) user and password so that components 1 (model development) and 2 (MLFlow) can access the Artifact Storage. And one last variable is the place in your machine where you want the files to be storage.
+It is needed to define a few environment variables to make sure that the containers can communicate with each other. Specifically, it is required to (i) create a user and password Postgres (component 3), so that MLFlow (component 2) can communicate with it. And (ii) a user and password so that components 1 (model development) and 2 (MLFlow) can access the Artifact Storage. The Minio framework works very similar to what it would be with a AWS, we will define a acess and secret key.
 
 Since the services are deployed with docker-compose the environment variables will be declared using [docker compose environment variables](https://docs.docker.com/compose/environment-variables/). Basically, all you have to do is create a `.env` in the same directory of the `docker-compose.yml` and define the variables as following:
 
@@ -45,20 +45,19 @@ POSTGRES_PASSWORD=<db_user_password>
 
 MINIO_ACCESS_KEY=<minio_access_key>
 MINIO_SECRET_KEY=<minio_secret_key>
-MINIO_ROOT_PATH=<absolute_path_to_store_models> 
 ```
-
+Now that the environment variables are configured, the next step is to start the services.
 ### 3) Start the Containers and Create the `mlflow/` Bucket
 
-The next step is to run the command
+The next step is to run the command:
 
 ```
 docker-compose up
 ```
 
-Once the images are build you should be able to access the following services:
-- MLFlow Server in [http://127.0.0.1:5000](http://127.0.0.1:5000);
-- Minio Server in [http://127.0.0.1:9000](http://127.0.0.1:9000).
+The first time that the command is executed will take some sime, since the images will have to be created. Once the images are build you should be able to access the following services:
+- MLFlow Server UI in [http://127.0.0.1:5000](http://127.0.0.1:5000);
+- Minio Server UI in [http://127.0.0.1:9000](http://127.0.0.1:9000).
 
 In a interface that looks like the image bellow
 
@@ -69,3 +68,5 @@ The final part of this step is to create a bucket called `mlflow` through the mi
 After that ML-Pipes is up and running and if you want to checkout how it was done check the `docker-compose.yml`. Note that this architecture can be 'easily' reproduced in a cloud environment with a (i) relational database, (ii) an instance of the Mlflow server and (iii) a storage bucket.
 
 You can check the `example-model-development/RunExperiment.ipynb` file to see how you can use MLFlow to keep track of your models and decide the best model for the problem.
+
+One final note before moving on is about where the *postgres* and *minio bucket* services will store their data. The project creates [docker volumes](https://docs.docker.com/compose/compose-file/compose-file-v3/#volumes), if you are running in linux, for instance, there should be the folders in `ml-pipes_minio_bucket/` and `ml-pipes_postgres-db/` inside the path `/var/lib/docker/volumes`. On the first folder you will find the artifacts (images, tables and binary models) loggeg from MLFlow and on the second one the postgres files.   
